@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, FlatList, TouchableOpacity, StyleSheet, ActivityIndicator, Image, SafeAreaView } from 'react-native';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 export default function ProductListScreen({ route, navigation }) {
   const { category } = route.params;
@@ -47,7 +48,10 @@ export default function ProductListScreen({ route, navigation }) {
         contentContainerStyle={styles.listContent}
       />
       <TouchableOpacity style={styles.floatingButton} onPress={() => navigation.goBack()}>
-        <Text style={styles.floatingButtonText}>Back</Text>
+        <View style={styles.buttonContent}>
+          <Icon name="arrow-left" size={20} color="white" />
+          <Text style={styles.floatingButtonText}>Back</Text>
+        </View>
       </TouchableOpacity>
     </SafeAreaView>
   );
@@ -103,9 +107,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     borderRadius: 5,
   },
+  buttonContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
   floatingButtonText: {
     color: '#fff',
     fontSize: 16,
     fontWeight: 'bold',
+    marginLeft: 5,
   },
 });

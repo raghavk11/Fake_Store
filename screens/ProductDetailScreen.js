@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, ScrollView, StyleSheet, ActivityIndicator, Image, TouchableOpacity } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context'; 
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 export default function ProductDetailScreen({ route, navigation }) {
   const { productId } = route.params;
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const insets = useSafeAreaInsets(); 
+
   useEffect(() => {
     const fetchProduct = async () => {
       try {
@@ -46,9 +48,11 @@ export default function ProductDetailScreen({ route, navigation }) {
       </ScrollView>
       <View style={styles.buttonContainer}>
         <TouchableOpacity style={[styles.button, styles.backButton]} onPress={() => navigation.goBack()}>
+          <Icon name="arrow-left" size={20} color="white" />
           <Text style={styles.buttonText}>Back</Text>
         </TouchableOpacity>
         <TouchableOpacity style={[styles.button, styles.cartButton]} onPress={() => {}}>
+          <Icon name="shopping-cart" size={20} color="white" />
           <Text style={styles.buttonText}>Add to Cart</Text>
         </TouchableOpacity>
       </View>
@@ -104,6 +108,8 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
   },
   button: {
+    flexDirection: 'row',
+    alignItems: 'center',
     padding: 15,
     borderRadius: 5,
     minWidth: '40%', 
@@ -118,5 +124,6 @@ const styles = StyleSheet.create({
   buttonText: {
     color: 'white',
     fontWeight: 'bold',
+    marginLeft: 5,
   },
 });
