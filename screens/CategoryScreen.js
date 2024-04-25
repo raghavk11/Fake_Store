@@ -38,7 +38,7 @@ export default function CategoryScreen({ navigation }) {
               style={styles.button}
               onPress={() => handleCategoryPress(category)}
             >
-              <Text style={styles.text}>{category}</Text>
+              <Text style={styles.text}>{category.toUpperCase()}</Text>
             </TouchableOpacity>
           ))}
         </View>
@@ -59,7 +59,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: 'black',
     alignSelf: 'center',
-    marginTop:30,
+    marginTop: 30,
     marginBottom: 20,
   },
   button: {

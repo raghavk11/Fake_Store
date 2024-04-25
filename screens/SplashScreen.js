@@ -20,7 +20,6 @@ export default function SplashScreen({ navigation }) {
   }, []);
 
   if (!fontLoaded) {
-    // Font is not loaded yet, render a loading indicator or null
     return null;
   }
 
@@ -31,8 +30,6 @@ export default function SplashScreen({ navigation }) {
       <TouchableOpacity style={styles.shopButton} onPress={() => navigation.navigate('CategoryScreen')}>
         <Text style={styles.buttonText}>Shop Now!</Text>
       </TouchableOpacity>
-      {/* Icons at the bottom (assuming you're using react-native-vector-icons) */}
-      {/* ... */}
     </View>
   );
 }

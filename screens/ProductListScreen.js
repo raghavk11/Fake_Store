@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, TouchableOpacity, StyleSheet, ActivityIndicator } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity, StyleSheet, ActivityIndicator, Image, SafeAreaView } from 'react-native';
 
 export default function ProductListScreen({ route, navigation }) {
   const { category } = route.params;
@@ -27,38 +27,80 @@ export default function ProductListScreen({ route, navigation }) {
       style={styles.item}
       onPress={() => navigation.navigate('ProductDetailScreen', { productId: item.id })}
     >
-      <Text style={styles.title}>{item.title}</Text>
-      <Text>{`$${item.price}`}</Text>
-      {/* Render product image and other details as needed */}
+      <Image source={{ uri: item.image }} style={styles.image} />
+      <View style={styles.infoContainer}>
+        <Text style={styles.title}>{item.title}</Text>
+        <Text>{`$${item.price}`}</Text>
+      </View>
     </TouchableOpacity>
   );
 
   return (
-    <View style={styles.container}>
-      {loading ? (
-        <ActivityIndicator size="large" color="#0000ff" />
-      ) : (
-        <FlatList
-          data={products}
-          keyExtractor={(item) => item.id.toString()}
-          renderItem={renderItem}
-        />
-      )}
-    </View>
+    <SafeAreaView style={styles.container}>
+      <FlatList
+        data={products}
+        keyExtractor={(item) => item.id.toString()}
+        renderItem={renderItem}
+        ListHeaderComponent={
+          <View style={styles.header}>
+            <Text style={styles.headerText}>{category.toUpperCase()}</Text>
+          </View>
+        }
+      />
+      <TouchableOpacity style={styles.floatingButton} onPress={() => navigation.goBack()}>
+        <Text style={styles.floatingButtonText}>Back</Text>
+      </TouchableOpacity>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 10,
+    backgroundColor: '#fff',
+  },
+  header: {
+    backgroundColor: '#007bff', 
+    alignItems: 'center',
+    paddingVertical: 10,
+  },
+  headerText: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#fff', 
+    textTransform: 'uppercase',
   },
   item: {
-    padding: 20,
+    paddingVertical: 20,
+    paddingHorizontal: 20,
     borderBottomWidth: 1,
     borderBottomColor: '#cccccc',
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  image: {
+    width: 100,
+    height: 100,
+    marginRight: 10,
+  },
+  infoContainer: {
+    flex: 1,
   },
   title: {
     fontSize: 18,
+  },
+  floatingButton: {
+    position: 'absolute',
+    bottom: 20,
+    right: 20,
+    backgroundColor: '#007bff',
+    paddingVertical: 15,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+  },
+  floatingButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });
