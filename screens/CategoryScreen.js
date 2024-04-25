@@ -1,28 +1,48 @@
-import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-
-const categories = [
-  'Electronics',
-  'Jewellery',
-  "Men's Clothing",
-  "Women's Clothing",
-];
+import React, { useState, useEffect } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet, ActivityIndicator } from 'react-native';
 
 export default function CategoryScreen({ navigation }) {
+  const [categories, setCategories] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await fetch('https://fakestoreapi.com/products/categories');
+        const json = await response.json();
+        setCategories(json);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCategories();
+  }, []);
+
+  const handleCategoryPress = (category) => {
+    navigation.navigate('ProductListScreen', { category });
+  };
+
   return (
     <View style={styles.container}>
-      <View style={styles.headerContainer}>
-        <Text style={styles.headerText}>Categories</Text>
-      </View>
-      {categories.map((category, index) => (
-        <TouchableOpacity
-          key={index}
-          style={styles.button}
-          onPress={() => navigation.navigate('ProductListScreen', { category })}
-        >
-          <Text style={styles.text}>{category}</Text>
-        </TouchableOpacity>
-      ))}
+      <Text style={styles.headerText}>Categories</Text>
+      {loading ? (
+        <ActivityIndicator size="large" color="#0000ff" />
+      ) : (
+        <View>
+          {categories.map((category, index) => (
+            <TouchableOpacity
+              key={index}
+              style={styles.button}
+              onPress={() => handleCategoryPress(category)}
+            >
+              <Text style={styles.text}>{category}</Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+      )}
     </View>
   );
 }
@@ -30,19 +50,17 @@ export default function CategoryScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'flex-start', 
+    justifyContent: 'flex-start',
     padding: 20,
     backgroundColor: '#fff',
   },
-  headerContainer: {
-    marginTop:30,
-    marginBottom: 20, 
-  },
   headerText: {
-    fontSize: 32, 
+    fontSize: 32,
     fontWeight: 'bold',
     color: 'black',
-    alignSelf: 'center', 
+    alignSelf: 'center',
+    marginTop:30,
+    marginBottom: 20,
   },
   button: {
     padding: 15,
