@@ -1,5 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Button, ScrollView, StyleSheet, ActivityIndicator, Image } from 'react-native';
+import {
+  View,
+  Text,
+  ScrollView,
+  StyleSheet,
+  ActivityIndicator,
+  Image,
+  TouchableOpacity,
+} from 'react-native';
 
 export default function ProductDetailScreen({ route, navigation }) {
   const { productId } = route.params;
@@ -27,53 +35,100 @@ export default function ProductDetailScreen({ route, navigation }) {
   }
 
   return (
-    <ScrollView style={styles.container}>
-      {product && (
-        <>
-          <Image source={{ uri: product.image }} style={styles.image} resizeMode="contain" />
-          <Text style={styles.title}>{product.title}</Text>
-          <View style={styles.infoContainer}>
-            <Text style={styles.info}>{`Rating: ${product.rating}`}</Text>
-            <Text style={styles.info}>{`Units Sold: ${product.sold}`}</Text>
-            <Text style={styles.info}>{`Price: $${product.price}`}</Text>
-          </View>
-          <Text style={styles.description}>{product.description}</Text>
-          <View style={styles.buttonContainer}>
-            <Button title="Back" onPress={() => navigation.goBack()} />
-            <Button title="Add to Cart" onPress={() => {}} />
-          </View>
-        </>
-      )}
-    </ScrollView>
+    <View style={styles.container}>
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
+        {product && (
+          <>
+            <Image source={{ uri: product.image }} style={styles.image} resizeMode="contain" />
+            <Text style={styles.title}>{product.title}</Text>
+            <View style={styles.detailRow}>
+              <Text style={styles.detail}>Rate: {product.rating.rate}</Text>
+              <Text style={styles.detail}>Sold: {product.rating.count}</Text>
+              <Text style={styles.detail}>Price: ${product.price}</Text>
+            </View>
+            <Text style={styles.descriptionTitle}>Description:</Text>
+            <Text style={styles.description}>{product.description}</Text>
+          </>
+        )}
+      </ScrollView>
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity style={[styles.button, styles.backButton]} onPress={() => navigation.goBack()}>
+          <Text style={styles.buttonText}>Back</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={[styles.button, styles.cartButton]} onPress={() => {}}>
+          <Text style={styles.buttonText}>Add to Cart</Text>
+        </TouchableOpacity>
+      </View>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
+  },
+  scrollContainer: {
+    flexGrow: 1,
+    paddingBottom: 100, // Adjust to accommodate button container
   },
   image: {
     width: '100%',
     height: 300,
-    marginBottom: 20,
+    marginTop: 20,
+    marginBottom: 10,
   },
   title: {
     fontSize: 24,
+    fontWeight: 'bold',
+    textAlign: 'center',
     marginBottom: 10,
   },
-  infoContainer: {
+  detailRow: {
     flexDirection: 'row',
-    marginBottom: 10,
+    justifyContent: 'space-around',
+    marginBottom: 20,
+    paddingHorizontal: 20,
   },
-  info: {
-    marginRight: 10,
+  detail: {
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  descriptionTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 4,
+    paddingHorizontal: 20,
   },
   description: {
+    fontSize: 16,
+    color: '#696969',
+    paddingHorizontal: 20,
     marginBottom: 20,
   },
   buttonContainer: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'space-around',
+    borderTopColor: '#cccccc',
+    marginBottom:20
+  },
+  button: {
+    padding: 15,
+    borderRadius: 5,
+    minWidth: '40%', // Ensure buttons have enough space and don't look squished
+    alignItems: 'center',
+  },
+  backButton: {
+    backgroundColor: '#1E90FF',
+  },
+  cartButton: {
+    backgroundColor: '#FF4500',
+  },
+  buttonText: {
+    color: 'white',
+    fontWeight: 'bold',
   },
 });
