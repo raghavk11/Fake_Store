@@ -27,7 +27,7 @@ export default function ProductListScreen({ route, navigation }) {
       style={styles.item}
       onPress={() => navigation.navigate('ProductDetailScreen', { productId: item.id })}
     >
-      <Image source={{ uri: item.image }} style={styles.image} />
+      <Image source={{ uri: item.image }} style={styles.image} resizeMode="contain" />
       <View style={styles.infoContainer}>
         <Text style={styles.title}>{item.title}</Text>
         <Text>{`$${item.price}`}</Text>

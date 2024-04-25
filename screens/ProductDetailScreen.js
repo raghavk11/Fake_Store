@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Button, ScrollView, StyleSheet, ActivityIndicator } from 'react-native';
+import { View, Text, Button, ScrollView, StyleSheet, ActivityIndicator, Image } from 'react-native';
 
 export default function ProductDetailScreen({ route, navigation }) {
   const { productId } = route.params;
@@ -30,13 +30,18 @@ export default function ProductDetailScreen({ route, navigation }) {
     <ScrollView style={styles.container}>
       {product && (
         <>
+          <Image source={{ uri: product.image }} style={styles.image} resizeMode="contain" />
           <Text style={styles.title}>{product.title}</Text>
-          {/* Render product image, rating, sold units, and other details */}
-          <Text>{`Price: $${product.price}`}</Text>
-          <Text>{product.description}</Text>
-          <Button title="Back" onPress={() => navigation.goBack()} />
-          {/* The Add to Cart button is non-functional in this milestone */}
-          <Button title="Add to Cart" onPress={() => {}} />
+          <View style={styles.infoContainer}>
+            <Text style={styles.info}>{`Rating: ${product.rating}`}</Text>
+            <Text style={styles.info}>{`Units Sold: ${product.sold}`}</Text>
+            <Text style={styles.info}>{`Price: $${product.price}`}</Text>
+          </View>
+          <Text style={styles.description}>{product.description}</Text>
+          <View style={styles.buttonContainer}>
+            <Button title="Back" onPress={() => navigation.goBack()} />
+            <Button title="Add to Cart" onPress={() => {}} />
+          </View>
         </>
       )}
     </ScrollView>
@@ -48,9 +53,27 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
   },
+  image: {
+    width: '100%',
+    height: 300,
+    marginBottom: 20,
+  },
   title: {
     fontSize: 24,
     marginBottom: 10,
   },
-  // ... more styles
+  infoContainer: {
+    flexDirection: 'row',
+    marginBottom: 10,
+  },
+  info: {
+    marginRight: 10,
+  },
+  description: {
+    marginBottom: 20,
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
 });
