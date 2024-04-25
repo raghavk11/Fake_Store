@@ -30,22 +30,21 @@ export default function ProductListScreen({ route, navigation }) {
       <Image source={{ uri: item.image }} style={styles.image} resizeMode="contain" />
       <View style={styles.infoContainer}>
         <Text style={styles.title}>{item.title}</Text>
-        <Text>{`$${item.price}`}</Text>
+        <Text style={styles.price}>{`$${item.price}`}</Text>
       </View>
     </TouchableOpacity>
   );
 
   return (
     <SafeAreaView style={styles.container}>
+      <View style={styles.header}>
+        <Text style={styles.headerText}>{category.toUpperCase()}</Text>
+      </View>
       <FlatList
         data={products}
         keyExtractor={(item) => item.id.toString()}
         renderItem={renderItem}
-        ListHeaderComponent={
-          <View style={styles.header}>
-            <Text style={styles.headerText}>{category.toUpperCase()}</Text>
-          </View>
-        }
+        contentContainerStyle={styles.listContent}
       />
       <TouchableOpacity style={styles.floatingButton} onPress={() => navigation.goBack()}>
         <Text style={styles.floatingButtonText}>Back</Text>
@@ -70,6 +69,9 @@ const styles = StyleSheet.create({
     color: '#fff', 
     textTransform: 'uppercase',
   },
+  listContent: {
+    paddingTop: 50,
+  },
   item: {
     paddingVertical: 20,
     paddingHorizontal: 20,
@@ -88,6 +90,9 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 18,
+  },
+  price: {
+    fontSize: 24, 
   },
   floatingButton: {
     position: 'absolute',

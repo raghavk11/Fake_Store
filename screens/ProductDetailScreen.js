@@ -1,19 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import {
-  View,
-  Text,
-  ScrollView,
-  StyleSheet,
-  ActivityIndicator,
-  Image,
-  TouchableOpacity,
-} from 'react-native';
+import { View, Text, ScrollView, StyleSheet, ActivityIndicator, Image, TouchableOpacity } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context'; 
 
 export default function ProductDetailScreen({ route, navigation }) {
   const { productId } = route.params;
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
-
+  const insets = useSafeAreaInsets(); 
   useEffect(() => {
     const fetchProduct = async () => {
       try {
@@ -35,7 +28,7 @@ export default function ProductDetailScreen({ route, navigation }) {
   }
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { paddingTop: insets.top, paddingBottom: insets.bottom }]}>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         {product && (
           <>
@@ -69,7 +62,6 @@ const styles = StyleSheet.create({
   },
   scrollContainer: {
     flexGrow: 1,
-    paddingBottom: 100, // Adjust to accommodate button container
   },
   image: {
     width: '100%',
@@ -106,19 +98,15 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   buttonContainer: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
     flexDirection: 'row',
     justifyContent: 'space-around',
     borderTopColor: '#cccccc',
-    marginBottom:20
+    paddingVertical: 10,
   },
   button: {
     padding: 15,
     borderRadius: 5,
-    minWidth: '40%', // Ensure buttons have enough space and don't look squished
+    minWidth: '40%', 
     alignItems: 'center',
   },
   backButton: {
