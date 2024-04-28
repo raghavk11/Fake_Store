@@ -21,17 +21,17 @@ export default function SplashScreen({ navigation }) {
     
     loadFonts();
 
-    // Set a timer for the splash screen
+
     const timer = setTimeout(() => {
       navigation.navigate('CategoryScreen');
-    }, 3000); // 5 seconds
+    }, 3000); 
 
-    // Clean up the timer when the component is unmounted or the navigation has occurred
+  
     return () => clearTimeout(timer);
   }, [navigation]);
 
   if (!fontLoaded) {
-    return null; // Or some loading indicator if you want
+    return null; 
   }
 
   return (

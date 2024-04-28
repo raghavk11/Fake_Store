@@ -173,7 +173,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   descriptionScrollView: {
-    maxHeight: 150, // Adjust the max height as needed
+    maxHeight: 150, 
   },
   description: {
     fontSize: 16,
