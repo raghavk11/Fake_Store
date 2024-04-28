@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
+import { View, StyleSheet, Image, Dimensions } from 'react-native';
 import * as Font from 'expo-font';
+
+const { width, height } = Dimensions.get('window');
 
 export default function SplashScreen({ navigation }) {
   const [fontLoaded, setFontLoaded] = useState(false);
@@ -16,20 +18,25 @@ export default function SplashScreen({ navigation }) {
         console.error('Error loading fonts:', error);
       }
     }
+    
     loadFonts();
-  }, []);
+
+    // Set a timer for the splash screen
+    const timer = setTimeout(() => {
+      navigation.navigate('CategoryScreen');
+    }, 3000); // 5 seconds
+
+    // Clean up the timer when the component is unmounted or the navigation has occurred
+    return () => clearTimeout(timer);
+  }, [navigation]);
 
   if (!fontLoaded) {
-    return null;
+    return null; // Or some loading indicator if you want
   }
 
   return (
     <View style={styles.container}>
-      <Image source={require('../assets/images/logo-fakestore.png')} style={styles.graphic} />
-      <Text style={styles.slogan}>Real Products, Unreal Deals!</Text>
-      <TouchableOpacity style={styles.shopButton} onPress={() => navigation.navigate('CategoryScreen')}>
-        <Text style={styles.buttonText}>Shop Now!</Text>
-      </TouchableOpacity>
+      <Image source={require('../assets/images/Splash.png')} style={styles.graphic} resizeMode="cover" />
     </View>
   );
 }
@@ -39,28 +46,9 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#007bff',
-  },
-  slogan: {
-    fontSize: 24,
-    color: '#FFD700',
-    fontFamily: 'LibreBaskerville-Bold',
-    marginBottom: 20,
   },
   graphic: {
-    width: 200,
-    height: 200,
-    marginBottom: 20,
-  },
-  shopButton: {
-    backgroundColor: '#FFD700',
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 5,
-  },
-  buttonText: {
-    color: '#007bff',
-    fontSize: 18,
-    fontWeight: 'bold',
+    width: width,
+    height: height,
   },
 });

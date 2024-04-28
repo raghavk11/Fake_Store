@@ -31,6 +31,9 @@ export default function ProductDetailScreen({ route, navigation }) {
 
   return (
     <View style={[styles.container, { paddingTop: insets.top, paddingBottom: insets.bottom }]}>
+      <View style={styles.header}>
+        <Text style={styles.headerText}>Product Details</Text>
+      </View>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         {product && (
           <>
@@ -50,21 +53,25 @@ export default function ProductDetailScreen({ route, navigation }) {
                 <Text style={styles.detailText}>Price: ${product.price}</Text>
               </View>
             </View>
+            <View style={styles.buttonContainer}>
+              <TouchableOpacity style={[styles.button, styles.backButton]} onPress={() => navigation.goBack()}>
+                <Icon name="arrow-left" size={20} color="white" />
+                <Text style={styles.buttonText}>Back</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={[styles.button, styles.cartButton]} onPress={() => {}}>
+                <Icon name="shopping-cart" size={20} color="white" />
+                <Text style={styles.buttonText}>Add to Cart</Text>
+              </TouchableOpacity>
+            </View>
             <Text style={styles.descriptionTitle}>Description:</Text>
-            <Text style={styles.description}>{product.description}</Text>
+            <View style={styles.descriptionContainer}>
+              <ScrollView style={styles.descriptionScrollView}>
+                <Text style={styles.description}>{product.description}</Text>
+              </ScrollView>
+            </View>
           </>
         )}
       </ScrollView>
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity style={[styles.button, styles.backButton]} onPress={() => navigation.goBack()}>
-          <Icon name="arrow-left" size={20} color="white" />
-          <Text style={styles.buttonText}>Back</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={[styles.button, styles.cartButton]} onPress={() => {}}>
-          <Icon name="shopping-cart" size={20} color="white" />
-          <Text style={styles.buttonText}>Add to Cart</Text>
-        </TouchableOpacity>
-      </View>
     </View>
   );
 }
@@ -72,6 +79,18 @@ export default function ProductDetailScreen({ route, navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#fff',
+  },
+  header: {
+    backgroundColor: '#007bff', 
+    alignItems: 'center',
+    paddingVertical: 10,
+  },
+  headerText: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#fff', 
+    textTransform: 'uppercase',
   },
   scrollContainer: {
     flexGrow: 1,
@@ -115,18 +134,6 @@ const styles = StyleSheet.create({
     color: '#ffffff',
     marginLeft: 5,
   },
-  descriptionTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 4,
-    paddingHorizontal: 20,
-  },
-  description: {
-    fontSize: 16,
-    color: '#696969',
-    paddingHorizontal: 20,
-    marginBottom: 20,
-  },
   buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'space-around',
@@ -151,5 +158,25 @@ const styles = StyleSheet.create({
     color: 'white',
     fontWeight: 'bold',
     marginLeft: 5,
+  },
+  descriptionTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 4,
+    paddingHorizontal: 20,
+  },
+  descriptionContainer: {
+    backgroundColor: '#f0f0f0',
+    padding: 20,
+    borderRadius: 8,
+    marginHorizontal: 20,
+    marginBottom: 20,
+  },
+  descriptionScrollView: {
+    maxHeight: 150, // Adjust the max height as needed
+  },
+  description: {
+    fontSize: 16,
+    color: '#696969',
   },
 });
