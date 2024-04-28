@@ -36,10 +36,19 @@ export default function ProductDetailScreen({ route, navigation }) {
           <>
             <Image source={{ uri: product.image }} style={styles.image} resizeMode="contain" />
             <Text style={styles.title}>{product.title}</Text>
-            <View style={styles.detailRow}>
-              <Text style={styles.detail}>Rate: {product.rating.rate}</Text>
-              <Text style={styles.detail}>Sold: {product.rating.count}</Text>
-              <Text style={styles.detail}>Price: ${product.price}</Text>
+            <View style={styles.detailContainer}>
+              <View style={[styles.detailItem, styles.rateItem]}>
+                <Icon name="star" size={20} color="#ffffff" />
+                <Text style={styles.detailText}>Rate: {product.rating.rate}</Text>
+              </View>
+              <View style={[styles.detailItem, styles.soldItem]}>
+                <Icon name="shopping-bag" size={20} color="#ffffff" />
+                <Text style={styles.detailText}>Sold: {product.rating.count}</Text>
+              </View>
+              <View style={[styles.detailItem, styles.priceItem]}>
+                <Icon name="dollar" size={20} color="#ffffff" />
+                <Text style={styles.detailText}>Price: ${product.price}</Text>
+              </View>
             </View>
             <Text style={styles.descriptionTitle}>Description:</Text>
             <Text style={styles.description}>{product.description}</Text>
@@ -79,15 +88,32 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginBottom: 10,
   },
-  detailRow: {
+  detailContainer: {
     flexDirection: 'row',
     justifyContent: 'space-around',
     marginBottom: 20,
     paddingHorizontal: 20,
   },
-  detail: {
+  detailItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 10,
+    borderRadius: 8,
+  },
+  rateItem: {
+    backgroundColor: '#1E90FF',
+  },
+  soldItem: {
+    backgroundColor: '#1E90FF',
+  },
+  priceItem: {
+    backgroundColor: '#1E90FF',
+  },
+  detailText: {
     fontSize: 16,
     fontWeight: 'bold',
+    color: '#ffffff',
+    marginLeft: 5,
   },
   descriptionTitle: {
     fontSize: 18,
