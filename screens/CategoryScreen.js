@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, ActivityIndicator } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, ActivityIndicator, SafeAreaView } from 'react-native';
 
-export default function CategoryScreen({ navigation }) {
+const CategoryScreen = ({ navigation }) => {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -17,7 +17,6 @@ export default function CategoryScreen({ navigation }) {
         setLoading(false);
       }
     };
-
     fetchCategories();
   }, []);
 
@@ -26,8 +25,10 @@ export default function CategoryScreen({ navigation }) {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.headerText}>Categories</Text>
+    <SafeAreaView style={styles.container}>
+      <View style={styles.header}>
+        <Text style={styles.headerText}>CATEGORIES</Text>
+      </View>
       {loading ? (
         <ActivityIndicator size="large" color="#0000ff" />
       ) : (
@@ -43,24 +44,26 @@ export default function CategoryScreen({ navigation }) {
           ))}
         </View>
       )}
-    </View>
+    </SafeAreaView>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'flex-start',
-    padding: 20,
     backgroundColor: '#fff',
   },
+  header: {
+    backgroundColor: '#007bff',
+    alignItems: 'center',
+    paddingVertical: 10,
+  },
   headerText: {
-    fontSize: 32,
+    fontSize: 20,
     fontWeight: 'bold',
-    color: 'black',
-    alignSelf: 'center',
-    marginTop: 30,
-    marginBottom: 20,
+    color: '#fff',
+    textTransform: 'uppercase',
   },
   button: {
     padding: 15,
@@ -77,3 +80,5 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 });
+
+export default CategoryScreen;

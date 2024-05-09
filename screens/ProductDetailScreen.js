@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, ScrollView, StyleSheet, ActivityIndicator, Image, TouchableOpacity } from 'react-native';
+import { View, Text, ScrollView, StyleSheet, ActivityIndicator, Image, TouchableOpacity, SafeAreaView } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 const ProductDetailScreen = ({ route, navigation }) => {
@@ -28,29 +28,31 @@ const ProductDetailScreen = ({ route, navigation }) => {
   }
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.headerText}>Product Details</Text>
-      </View>
-      {product && (
-        <>
-          <Image source={{ uri: product.image }} style={styles.image} resizeMode="contain" />
-          <Text style={styles.title}>{product.title}</Text>
-          <View style={styles.detailContainer}>
-            <DetailItem icon="star" text={`Rate: ${product.rating.rate}`} />
-            <DetailItem icon="shopping-bag" text={`Sold: ${product.rating.count}`} />
-            <DetailItem icon="dollar" text={`Price: $${product.price}`} />
-          </View>
-          <ButtonRow navigation={navigation} />
-          <Text style={styles.descriptionTitle}>Description:</Text>
-          <View style={styles.descriptionContainer}>
-            <ScrollView style={styles.descriptionScrollView}>
-              <Text style={styles.description}>{product.description}</Text>
-            </ScrollView>
-          </View>
-        </>
-      )}
-    </ScrollView>
+    <SafeAreaView style={styles.container}>
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
+        <View style={styles.header}>
+          <Text style={styles.headerText}>PRODUCT DETAILS</Text>
+        </View>
+        {product && (
+          <>
+            <Image source={{ uri: product.image }} style={styles.image} resizeMode="contain" />
+            <Text style={styles.title}>{product.title}</Text>
+            <View style={styles.detailContainer}>
+              <DetailItem icon="star" text={`Rate: ${product.rating.rate}`} />
+              <DetailItem icon="shopping-bag" text={`Sold: ${product.rating.count}`} />
+              <DetailItem icon="dollar" text={`Price: $${product.price}`} />
+            </View>
+            <ButtonRow navigation={navigation} />
+            <Text style={styles.descriptionTitle}>Description:</Text>
+            <View style={styles.descriptionContainer}>
+              <ScrollView style={styles.descriptionScrollView}>
+                <Text style={styles.description}>{product.description}</Text>
+              </ScrollView>
+            </View>
+          </>
+        )}
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 
@@ -77,8 +79,11 @@ const Button = ({ icon, text, color, onPress }) => (
 
 const styles = StyleSheet.create({
   container: {
-    flexGrow: 1,
+    flex: 1,
     backgroundColor: '#fff',
+  },
+  scrollContainer: {
+    flexGrow: 1,
   },
   header: {
     backgroundColor: '#007bff',

@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, TouchableOpacity, StyleSheet, ActivityIndicator, Image, SafeAreaView } from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import { View, Text, FlatList, TouchableOpacity, StyleSheet, Image, SafeAreaView, ActivityIndicator } from 'react-native';
 
-export default function ProductListScreen({ route, navigation }) {
+const ProductListScreen = ({ route, navigation }) => {
   const { category } = route.params;
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -19,7 +18,6 @@ export default function ProductListScreen({ route, navigation }) {
         setLoading(false);
       }
     };
-
     fetchProducts();
   }, [category]);
 
@@ -45,21 +43,19 @@ export default function ProductListScreen({ route, navigation }) {
       <View style={styles.header}>
         <Text style={styles.headerText}>{category.toUpperCase()}</Text>
       </View>
-      <FlatList
-        data={products}
-        keyExtractor={(item) => item.id.toString()}
-        renderItem={renderItem}
-        contentContainerStyle={styles.listContent}
-      />
-      <TouchableOpacity style={styles.floatingButton} onPress={() => navigation.goBack()}>
-        <View style={styles.buttonContent}>
-          <Icon name="arrow-left" size={20} color="white" />
-          <Text style={styles.floatingButtonText}>Back</Text>
-        </View>
-      </TouchableOpacity>
+      {loading ? (
+        <ActivityIndicator size="large" color="#0000ff" />
+      ) : (
+        <FlatList
+          data={products}
+          renderItem={renderItem}
+          keyExtractor={(item) => item.id.toString()}
+          contentContainerStyle={styles.list}
+        />
+      )}
     </SafeAreaView>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -77,16 +73,17 @@ const styles = StyleSheet.create({
     color: '#fff',
     textTransform: 'uppercase',
   },
-  listContent: {
-    paddingTop: 50,
+  list: {
+    paddingHorizontal: 10,
+    paddingTop: 10,
   },
   item: {
-    paddingVertical: 20,
-    paddingHorizontal: 20,
-    borderBottomWidth: 1,
-    borderBottomColor: '#cccccc',
     flexDirection: 'row',
     alignItems: 'center',
+    marginBottom: 20,
+    borderBottomWidth: 1,
+    borderBottomColor: '#ccc',
+    paddingBottom: 20,
   },
   image: {
     width: 100,
@@ -98,27 +95,13 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 5,
   },
   price: {
-    fontSize: 24,
-  },
-  floatingButton: {
-    position: 'absolute',
-    bottom: 20,
-    right: 20,
-    backgroundColor: '#007bff',
-    paddingVertical: 15,
-    paddingHorizontal: 20,
-    borderRadius: 5,
-  },
-  buttonContent: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  floatingButtonText: {
-    color: '#fff',
     fontSize: 16,
-    fontWeight: 'bold',
-    marginLeft: 5,
+    color: '#888',
   },
 });
+
+export default ProductListScreen;
