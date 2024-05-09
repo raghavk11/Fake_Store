@@ -1,5 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, FlatList, TouchableOpacity, StyleSheet, Image, SafeAreaView, ActivityIndicator } from 'react-native';
+import { useDispatch } from 'react-redux';
+import { addItem } from '../Features/Cart/CartSlice';
+
+const ButtonRow = ({ navigation, product }) => {
+  const dispatch = useDispatch();
+
+  const handleAddToCart = () => {
+    dispatch(addItem(product));
+  };
+
+  return (
+    <View style={styles.buttonContainer}>
+      <Button icon="arrow-left" text="Back" color="#1E90FF" onPress={() => navigation.goBack()} />
+      <Button icon="shopping-cart" text="Add to Cart" color="#FF4500" onPress={handleAddToCart} />
+    </View>
+  );
+};
 
 const ProductListScreen = ({ route, navigation }) => {
   const { category } = route.params;

@@ -7,7 +7,7 @@ import CategoryScreen from './screens/CategoryScreen';
 import CartScreen from './screens/CartScreen';
 import ProductListScreen from './screens/ProductListScreen';
 import ProductDetailScreen from './screens/ProductDetailScreen';
-import { selectCartCount } from './Features/Cart/CartSlice';
+import { selectCartItemsCount } from './Features/Cart/CartSlice';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -23,7 +23,7 @@ const CategoriesStack = () => {
 };
 
 const BottomNav = () => {
-  const cartItemCount = useSelector(selectCartCount);
+  const cartItemCount = useSelector(selectCartItemsCount);
 
   return (
     <Tab.Navigator screenOptions={{ headerShown: false }}>
