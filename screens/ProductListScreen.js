@@ -23,10 +23,14 @@ export default function ProductListScreen({ route, navigation }) {
     fetchProducts();
   }, [category]);
 
+  const handleProductPress = (productId) => {
+    navigation.navigate('ProductDetailScreen', { productId: productId });
+  };
+
   const renderItem = ({ item }) => (
     <TouchableOpacity
       style={styles.item}
-      onPress={() => navigation.navigate('ProductDetailScreen', { productId: item.id })}
+      onPress={() => handleProductPress(item.id)}
     >
       <Image source={{ uri: item.image }} style={styles.image} resizeMode="contain" />
       <View style={styles.infoContainer}>
@@ -63,14 +67,14 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   header: {
-    backgroundColor: '#007bff', 
+    backgroundColor: '#007bff',
     alignItems: 'center',
     paddingVertical: 10,
   },
   headerText: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: '#fff', 
+    color: '#fff',
     textTransform: 'uppercase',
   },
   listContent: {
@@ -96,7 +100,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
   price: {
-    fontSize: 24, 
+    fontSize: 24,
   },
   floatingButton: {
     position: 'absolute',

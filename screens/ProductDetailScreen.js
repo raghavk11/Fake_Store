@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, ScrollView, StyleSheet, ActivityIndicator, Image, TouchableOpacity } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-export default function ProductDetailScreen({ route, navigation }) {
+const ProductDetailScreen = ({ route, navigation }) => {
   const { productId } = route.params;
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
-  const insets = useSafeAreaInsets(); 
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -30,70 +28,68 @@ export default function ProductDetailScreen({ route, navigation }) {
   }
 
   return (
-    <View style={[styles.container, { paddingTop: insets.top, paddingBottom: insets.bottom }]}>
+    <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.header}>
         <Text style={styles.headerText}>Product Details</Text>
       </View>
-      <ScrollView contentContainerStyle={styles.scrollContainer}>
-        {product && (
-          <>
-            <Image source={{ uri: product.image }} style={styles.image} resizeMode="contain" />
-            <Text style={styles.title}>{product.title}</Text>
-            <View style={styles.detailContainer}>
-              <View style={[styles.detailItem, styles.rateItem]}>
-                <Icon name="star" size={20} color="#ffffff" />
-                <Text style={styles.detailText}>Rate: {product.rating.rate}</Text>
-              </View>
-              <View style={[styles.detailItem, styles.soldItem]}>
-                <Icon name="shopping-bag" size={20} color="#ffffff" />
-                <Text style={styles.detailText}>Sold: {product.rating.count}</Text>
-              </View>
-              <View style={[styles.detailItem, styles.priceItem]}>
-                <Icon name="dollar" size={20} color="#ffffff" />
-                <Text style={styles.detailText}>Price: ${product.price}</Text>
-              </View>
-            </View>
-            <View style={styles.buttonContainer}>
-              <TouchableOpacity style={[styles.button, styles.backButton]} onPress={() => navigation.goBack()}>
-                <Icon name="arrow-left" size={20} color="white" />
-                <Text style={styles.buttonText}>Back</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={[styles.button, styles.cartButton]} onPress={() => {}}>
-                <Icon name="shopping-cart" size={20} color="white" />
-                <Text style={styles.buttonText}>Add to Cart</Text>
-              </TouchableOpacity>
-            </View>
-            <Text style={styles.descriptionTitle}>Description:</Text>
-            <View style={styles.descriptionContainer}>
-              <ScrollView style={styles.descriptionScrollView}>
-                <Text style={styles.description}>{product.description}</Text>
-              </ScrollView>
-            </View>
-          </>
-        )}
-      </ScrollView>
-    </View>
+      {product && (
+        <>
+          <Image source={{ uri: product.image }} style={styles.image} resizeMode="contain" />
+          <Text style={styles.title}>{product.title}</Text>
+          <View style={styles.detailContainer}>
+            <DetailItem icon="star" text={`Rate: ${product.rating.rate}`} />
+            <DetailItem icon="shopping-bag" text={`Sold: ${product.rating.count}`} />
+            <DetailItem icon="dollar" text={`Price: $${product.price}`} />
+          </View>
+          <ButtonRow navigation={navigation} />
+          <Text style={styles.descriptionTitle}>Description:</Text>
+          <View style={styles.descriptionContainer}>
+            <ScrollView style={styles.descriptionScrollView}>
+              <Text style={styles.description}>{product.description}</Text>
+            </ScrollView>
+          </View>
+        </>
+      )}
+    </ScrollView>
   );
-}
+};
+
+const DetailItem = ({ icon, text }) => (
+  <View style={[styles.detailItem, styles[`${icon}Item`]]}>
+    <Icon name={icon} size={20} color="#ffffff" />
+    <Text style={styles.detailText}>{text}</Text>
+  </View>
+);
+
+const ButtonRow = ({ navigation }) => (
+  <View style={styles.buttonContainer}>
+    <Button icon="arrow-left" text="Back" color="#1E90FF" onPress={() => navigation.goBack()} />
+    <Button icon="shopping-cart" text="Add to Cart" color="#FF4500" onPress={() => {}} />
+  </View>
+);
+
+const Button = ({ icon, text, color, onPress }) => (
+  <TouchableOpacity style={[styles.button, { backgroundColor: color }]} onPress={onPress}>
+    <Icon name={icon} size={20} color="white" />
+    <Text style={styles.buttonText}>{text}</Text>
+  </TouchableOpacity>
+);
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flexGrow: 1,
     backgroundColor: '#fff',
   },
   header: {
-    backgroundColor: '#007bff', 
+    backgroundColor: '#007bff',
     alignItems: 'center',
     paddingVertical: 10,
   },
   headerText: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: '#fff', 
+    color: '#fff',
     textTransform: 'uppercase',
-  },
-  scrollContainer: {
-    flexGrow: 1,
   },
   image: {
     width: '100%',
@@ -145,14 +141,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 15,
     borderRadius: 5,
-    minWidth: '40%', 
+    minWidth: '40%',
     alignItems: 'center',
-  },
-  backButton: {
-    backgroundColor: '#1E90FF',
-  },
-  cartButton: {
-    backgroundColor: '#FF4500',
   },
   buttonText: {
     color: 'white',
@@ -173,10 +163,12 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   descriptionScrollView: {
-    maxHeight: 150, 
+    maxHeight: 150,
   },
   description: {
     fontSize: 16,
     color: '#696969',
   },
 });
+
+export default ProductDetailScreen;
