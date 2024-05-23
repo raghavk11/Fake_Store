@@ -7,7 +7,12 @@ import CategoryScreen from './screens/CategoryScreen';
 import CartScreen from './screens/CartScreen';
 import ProductListScreen from './screens/ProductListScreen';
 import ProductDetailScreen from './screens/ProductDetailScreen';
+import OrdersScreen from './screens/OrdersScreen';
+import ProfileScreen from './screens/ProfileScreen';
+import SignInScreen from './screens/SignInScreen';
+import SignUpScreen from './screens/SignUpScreen';
 import { selectCartItemsCount } from './Features/Cart/CartSlice';
+import { selectIsLoggedIn } from './Features/Auth/AuthSlice';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -22,30 +27,68 @@ const CategoriesStack = () => {
   );
 };
 
+const ProfileStack = () => {
+  const isLoggedIn = useSelector(selectIsLoggedIn);
+
+  return (
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+      {isLoggedIn ? (
+        <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
+      ) : (
+        <>
+          <Stack.Screen name="SignInScreen" component={SignInScreen} />
+          <Stack.Screen name="SignUpScreen" component={SignUpScreen} />
+        </>
+      )}
+    </Stack.Navigator>
+  );
+};
+
 const BottomNav = () => {
   const cartItemCount = useSelector(selectCartItemsCount);
+  const isLoggedIn = useSelector(selectIsLoggedIn);
 
   return (
     <Tab.Navigator screenOptions={{ headerShown: false }}>
       <Tab.Screen
-        name="CategoriesTab"
+        name="ProductsTab"
         component={CategoriesStack}
         options={{
-          tabBarLabel: 'Categories',
+          tabBarLabel: 'Products',
           tabBarIcon: ({ color, size }) => (
             <MaterialIcons name="store" size={size} color={color} />
           ),
         }}
       />
       <Tab.Screen
-        name="ShoppingCartTab"
+        name="CartTab"
         component={CartScreen}
         options={{
-          tabBarLabel: 'Shopping Cart',
+          tabBarLabel: 'My Cart',
           tabBarIcon: ({ color, size }) => (
             <MaterialIcons name="shopping-cart" size={size} color={color} />
           ),
-          tabBarBadge: cartItemCount > 0 ? cartItemCount : null,
+          tabBarBadge: isLoggedIn && cartItemCount > 0 ? cartItemCount : null,
+        }}
+      />
+      <Tab.Screen
+        name="OrdersTab"
+        component={OrdersScreen}
+        options={{
+          tabBarLabel: 'My Orders',
+          tabBarIcon: ({ color, size }) => (
+            <MaterialIcons name="list-alt" size={size} color={color} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="ProfileTab"
+        component={ProfileStack}
+        options={{
+          tabBarLabel: 'Profile',
+          tabBarIcon: ({ color, size }) => (
+            <MaterialIcons name="person" size={size} color={color} />
+          ),
         }}
       />
     </Tab.Navigator>
