@@ -23,7 +23,7 @@ const ProductDetailScreen = ({ route, navigation }) => {
         setLoading(false);
       }
     };
-  
+
     fetchProduct();
   }, [productId]);
 
@@ -43,7 +43,9 @@ const ProductDetailScreen = ({ route, navigation }) => {
         <View style={styles.header}>
           <Text style={styles.headerText}>PRODUCT DETAILS</Text>
         </View>
-        {product && (
+        {loading ? (
+          <ActivityIndicator size="large" color="#0000ff" />
+        ) : (
           <>
             <Image source={{ uri: product.image }} style={styles.image} resizeMode="contain" />
             <Text style={styles.title}>{product.title}</Text>
@@ -65,6 +67,7 @@ const ProductDetailScreen = ({ route, navigation }) => {
     </SafeAreaView>
   );
 };
+
 
 const DetailItem = ({ icon, text }) => (
   <View style={[styles.detailItem, styles[`${icon}Item`]]}>
