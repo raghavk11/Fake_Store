@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, FlatList, TouchableOpacity, StyleSheet, Image, SafeAreaView, ActivityIndicator } from 'react-native';
 import { useDispatch } from 'react-redux';
 import { addItem } from '../Features/Cart/CartSlice';
+import { API_BASE_URL } from '../config';
 
 const ButtonRow = ({ navigation, product }) => {
   const dispatch = useDispatch();
@@ -26,15 +27,16 @@ const ProductListScreen = ({ route, navigation }) => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch(`https://fakestoreapi.com/products/category/${encodeURIComponent(category)}`);
+        const response = await fetch(`${API_BASE_URL}/products/category/${encodeURIComponent(category)}`);
         const json = await response.json();
         setProducts(json);
       } catch (error) {
-        console.error(error);
+        console.error('Error fetching products:', error);
       } finally {
         setLoading(false);
       }
     };
+  
     fetchProducts();
   }, [category]);
 

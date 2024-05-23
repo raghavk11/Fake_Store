@@ -3,6 +3,7 @@ import { View, Text, ScrollView, StyleSheet, ActivityIndicator, Image, Touchable
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { useDispatch } from 'react-redux';
 import { addItem } from '../Features/Cart/CartSlice';
+import { API_BASE_URL } from '../config';
 
 const ProductDetailScreen = ({ route, navigation }) => {
   const { productId } = route.params;
@@ -13,16 +14,16 @@ const ProductDetailScreen = ({ route, navigation }) => {
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const response = await fetch(`https://fakestoreapi.com/products/${productId}`);
+        const response = await fetch(`${API_BASE_URL}/products/${productId}`);
         const json = await response.json();
         setProduct(json);
       } catch (error) {
-        console.error(error);
+        console.error('Error fetching product:', error);
       } finally {
         setLoading(false);
       }
     };
-
+  
     fetchProduct();
   }, [productId]);
 

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, ActivityIndicator, SafeAreaView } from 'react-native';
+import { API_BASE_URL } from '../config';
 
 const CategoryScreen = ({ navigation }) => {
   const [categories, setCategories] = useState([]);
@@ -8,15 +9,16 @@ const CategoryScreen = ({ navigation }) => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await fetch('https://fakestoreapi.com/products/categories');
+        const response = await fetch(`${API_BASE_URL}/products/categories`);
         const json = await response.json();
         setCategories(json);
       } catch (error) {
-        console.error(error);
+        console.error('Error fetching categories:', error);
       } finally {
         setLoading(false);
       }
     };
+  
     fetchCategories();
   }, []);
 
