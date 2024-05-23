@@ -36,7 +36,7 @@ const ProductListScreen = ({ route, navigation }) => {
         setLoading(false);
       }
     };
-  
+
     fetchProducts();
   }, [category]);
 
@@ -72,6 +72,9 @@ const ProductListScreen = ({ route, navigation }) => {
           contentContainerStyle={styles.list}
         />
       )}
+      <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+        <Text style={styles.backButtonText}>Back</Text>
+      </TouchableOpacity>
     </SafeAreaView>
   );
 };
