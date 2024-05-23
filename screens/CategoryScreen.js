@@ -1,12 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, ActivityIndicator, SafeAreaView } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, ActivityIndicator, SafeAreaView, Alert } from 'react-native';
 import { API_BASE_URL } from '../config';
+import { useSelector } from 'react-redux';
+import { selectIsLoggedIn } from '../Features/Auth/AuthSlice';
 
 const CategoryScreen = ({ navigation }) => {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
+  const isLoggedIn = useSelector(selectIsLoggedIn);
 
   useEffect(() => {
+    if (!isLoggedIn) {
+      Alert.alert('Please sign in', 'You need to be logged in to access this screen.');
+      return;
+    }
+
     const fetchCategories = async () => {
       try {
         const response = await fetch(`${API_BASE_URL}/products/categories`);
@@ -18,9 +26,9 @@ const CategoryScreen = ({ navigation }) => {
         setLoading(false);
       }
     };
-  
+
     fetchCategories();
-  }, []);
+  }, [isLoggedIn]);
 
   const handleCategoryPress = (category) => {
     navigation.navigate('ProductListScreen', { category: category });
@@ -44,6 +52,9 @@ const CategoryScreen = ({ navigation }) => {
               <Text style={styles.text}>{category.toUpperCase()}</Text>
             </TouchableOpacity>
           ))}
+          <TouchableOpacity style={styles.button}>
+            <Text style={styles.text}>YOUR_NAME</Text>
+          </TouchableOpacity>
         </View>
       )}
     </SafeAreaView>
