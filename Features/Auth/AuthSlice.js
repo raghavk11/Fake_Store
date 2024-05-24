@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
-import { API_BASE_URL } from '../config';
+import { API_BASE_URL } from '../../config';
 
 export const login = createAsyncThunk(
   'auth/login',
@@ -12,7 +12,11 @@ export const login = createAsyncThunk(
       });
       return response.data;
     } catch (error) {
-      return rejectWithValue(error.response.data);
+      if (error.response && error.response.data) {
+        return rejectWithValue(error.response.data);
+      } else {
+        return rejectWithValue(error.message);
+      }
     }
   }
 );
@@ -28,7 +32,11 @@ export const signup = createAsyncThunk(
       });
       return response.data;
     } catch (error) {
-      return rejectWithValue(error.response.data);
+      if (error.response && error.response.data) {
+        return rejectWithValue(error.response.data);
+      } else {
+        return rejectWithValue(error.message);
+      }
     }
   }
 );
@@ -47,6 +55,9 @@ const authSlice = createSlice({
       state.isLoggedIn = false;
       state.loading = false;
       state.error = null;
+    },
+    navigateToSignIn: (state) => {
+      // Do nothing, this action is handled in the navigation middleware
     },
   },
   extraReducers: (builder) => {
@@ -80,11 +91,23 @@ const authSlice = createSlice({
   },
 });
 
-export const { logout } = authSlice.actions;
+export const { logout, navigateToSignIn } = authSlice.actions;
 
 export const selectUser = (state) => state.auth.user;
 export const selectIsLoggedIn = (state) => state.auth.isLoggedIn;
 export const selectLoading = (state) => state.auth.loading;
 export const selectError = (state) => state.auth.error;
+
+const navigationMiddleware = (navigationRef) => (store) => (next) => (action) => {
+  if (action.type === navigateToSignIn.type) {
+    navigationRef.current?.navigate('ProfileTab', { screen: 'SignInScreen' });
+  }
+
+  return next(action);
+};
+
+export const createAuthMiddleware = (navigationRef) => {
+  return navigationMiddleware(navigationRef);
+};
 
 export default authSlice.reducer;
