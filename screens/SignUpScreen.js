@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, StyleSheet, Button } from 'react-native';
+import { View, Text, TextInput, StyleSheet, Button, Alert } from 'react-native';
 import { useDispatch } from 'react-redux';
 import { signup } from '../Features/Auth/AuthSlice';
 
@@ -9,39 +9,46 @@ const SignUpScreen = ({ navigation }) => {
   const [password, setPassword] = useState('');
   const dispatch = useDispatch();
 
-  const handleSignUp = () => {
-    // Perform sign-up logic here
-    dispatch(signup({ name, email, password }));
+  const handleSignUp = async () => {
+    try {
+      await dispatch(signup({ name, email, password })).unwrap();
+      // Sign-up successful, no need to navigate as the AuthNavigator will handle it
+    } catch (error) {
+      // Sign-up failed, show an error message
+      Alert.alert('Error', error.message || 'An error occurred during sign-up');
+    }
   };
 
   const handleSwitchToSignIn = () => {
-    navigation.navigate('SignInScreen');
+    navigation.navigate('SignIn');
   };
 
   return (
     <View style={styles.container}>
-      <Text>Sign Up Screen</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Name"
-        value={name}
-        onChangeText={setName}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Email"
-        value={email}
-        onChangeText={setEmail}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Password"
-        secureTextEntry
-        value={password}
-        onChangeText={setPassword}
-      />
-      <Button title="Sign Up" onPress={handleSignUp} />
-      <Button title="Switch to Sign In" onPress={handleSwitchToSignIn} />
+      <View style={styles.formContainer}>
+        <Text style={styles.title}>Sign Up Screen</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Name"
+          value={name}
+          onChangeText={setName}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Email"
+          value={email}
+          onChangeText={setEmail}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Password"
+          secureTextEntry
+          value={password}
+          onChangeText={setPassword}
+        />
+        <Button title="Sign Up" onPress={handleSignUp} />
+        <Button title="Switch to Sign In" onPress={handleSwitchToSignIn} />
+      </View>
     </View>
   );
 };
@@ -51,9 +58,30 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    paddingHorizontal: 20,
+  },
+  formContainer: {
+    width: '100%',
+    maxWidth: 400,
+    padding: 20,
+    backgroundColor: '#fff',
+    borderRadius: 10,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 20,
+    textAlign: 'center',
   },
   input: {
-    width: '80%',
     height: 40,
     borderColor: 'gray',
     borderWidth: 1,

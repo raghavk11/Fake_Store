@@ -1,13 +1,12 @@
 import React, { useEffect } from 'react';
 import { View, StyleSheet, Image, Dimensions } from 'react-native';
-import * as Font from 'expo-font';
 
 const { width, height } = Dimensions.get('window');
 
 const SplashScreen = ({ navigation }) => {
   useEffect(() => {
     const timer = setTimeout(() => {
-      navigation.replace('MainApp'); // Navigate to MainApp (CategoryScreen) after 3 seconds
+      navigation.replace('MainApp');
     }, 3000);
 
     return () => {

@@ -11,7 +11,12 @@ const CategoryScreen = ({ navigation }) => {
 
   useEffect(() => {
     if (!isLoggedIn) {
-      Alert.alert('Please sign in', 'You need to be logged in to access this screen.');
+      Alert.alert('Please sign in', 'You need to be logged in to access this screen.', [
+        {
+          text: 'Sign In',
+          onPress: () => navigation.navigate('SignInScreen'),
+        },
+      ]);
       return;
     }
 
@@ -28,7 +33,7 @@ const CategoryScreen = ({ navigation }) => {
     };
 
     fetchCategories();
-  }, [isLoggedIn]);
+  }, [isLoggedIn, navigation]);
 
   const handleCategoryPress = (category) => {
     navigation.navigate('ProductListScreen', { category: category });
@@ -60,6 +65,7 @@ const CategoryScreen = ({ navigation }) => {
     </SafeAreaView>
   );
 };
+
 
 const styles = StyleSheet.create({
   container: {

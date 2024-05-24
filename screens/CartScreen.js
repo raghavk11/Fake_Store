@@ -1,11 +1,24 @@
-import React from 'react';
-import { View, Text, FlatList, TouchableOpacity, StyleSheet, Image, SafeAreaView } from 'react-native';
+import React, { useEffect } from 'react';
+import { View, Text, FlatList, TouchableOpacity, StyleSheet, Image, SafeAreaView, Alert } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import { incrementQuantity, decrementQuantity, removeItem } from '../Features/Cart/CartSlice';
+import { selectIsLoggedIn } from '../Features/Auth/AuthSlice';
 
-const CartScreen = () => {
+const CartScreen = ({ navigation }) => {
   const cartItems = useSelector((state) => state.cart.items);
+  const isLoggedIn = useSelector(selectIsLoggedIn);
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (!isLoggedIn) {
+      Alert.alert('Please sign in', 'You need to be logged in to access this screen.', [
+        {
+          text: 'Sign In',
+          onPress: () => navigation.navigate('SignInScreen'),
+        },
+      ]);
+    }
+  }, [isLoggedIn, navigation]);
 
   const renderCartItem = ({ item }) => (
     <View style={styles.cartItem}>
