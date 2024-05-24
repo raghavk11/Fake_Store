@@ -1,64 +1,60 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { createStackNavigator } from '@react-navigation/stack';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useSelector } from 'react-redux';
 import CategoryScreen from './screens/CategoryScreen';
 import CartScreen from './screens/CartScreen';
-import ProductListScreen from './screens/ProductListScreen';
-import ProductDetailScreen from './screens/ProductDetailScreen';
 import OrdersScreen from './screens/OrdersScreen';
-import ProfileScreen from './screens/ProfileScreen';
-import SignInScreen from './screens/SignInScreen';
-import SignUpScreen from './screens/SignUpScreen';
+import AuthNavigator from './screens/AuthNavigator';
 import { selectCartItemsCount } from './Features/Cart/CartSlice';
 import { selectIsLoggedIn } from './Features/Auth/AuthSlice';
+import { Alert } from 'react-native';
 
 const Tab = createBottomTabNavigator();
-const Stack = createStackNavigator();
-
-const CategoriesStack = () => {
-  return (
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="CategoriesScreen" component={CategoryScreen} />
-      <Stack.Screen name="ProductListScreen" component={ProductListScreen} />
-      <Stack.Screen name="ProductDetailScreen" component={ProductDetailScreen} />
-    </Stack.Navigator>
-  );
-};
-
-const ProfileStack = () => {
-  const isLoggedIn = useSelector(selectIsLoggedIn);
-
-  return (
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
-      {isLoggedIn ? (
-        <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
-      ) : (
-        <>
-          <Stack.Screen name="SignInScreen" component={SignInScreen} />
-          <Stack.Screen name="SignUpScreen" component={SignUpScreen} />
-        </>
-      )}
-    </Stack.Navigator>
-  );
-};
 
 const BottomNav = () => {
   const cartItemCount = useSelector(selectCartItemsCount);
   const isLoggedIn = useSelector(selectIsLoggedIn);
 
+  const showLoginAlert = () => {
+    Alert.alert(
+      'Login Required',
+      'You need to log in to access this feature.',
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+        {
+          text: 'Log In',
+          onPress: () => {
+            // No need to navigate, as the AuthNavigator will handle it
+          },
+        },
+      ],
+      { cancelable: false }
+    );
+  };
+
   return (
     <Tab.Navigator screenOptions={{ headerShown: false }}>
       <Tab.Screen
         name="ProductsTab"
-        component={CategoriesStack}
+        component={CategoryScreen}
         options={{
           tabBarLabel: 'Products',
           tabBarIcon: ({ color, size }) => (
             <MaterialIcons name="store" size={size} color={color} />
           ),
         }}
+        listeners={({ navigation }) => ({
+          tabPress: (e) => {
+            if (!isLoggedIn) {
+              e.preventDefault();
+              showLoginAlert();
+            }
+          },
+        })}
       />
       <Tab.Screen
         name="CartTab"
@@ -70,6 +66,14 @@ const BottomNav = () => {
           ),
           tabBarBadge: isLoggedIn && cartItemCount > 0 ? cartItemCount : null,
         }}
+        listeners={({ navigation }) => ({
+          tabPress: (e) => {
+            if (!isLoggedIn) {
+              e.preventDefault();
+              showLoginAlert();
+            }
+          },
+        })}
       />
       <Tab.Screen
         name="OrdersTab"
@@ -80,10 +84,18 @@ const BottomNav = () => {
             <MaterialIcons name="list-alt" size={size} color={color} />
           ),
         }}
+        listeners={({ navigation }) => ({
+          tabPress: (e) => {
+            if (!isLoggedIn) {
+              e.preventDefault();
+              showLoginAlert();
+            }
+          },
+        })}
       />
       <Tab.Screen
-        name="ProfileTab"
-        component={ProfileStack}
+        name="AuthTab"
+        component={AuthNavigator}
         options={{
           tabBarLabel: 'Profile',
           tabBarIcon: ({ color, size }) => (
