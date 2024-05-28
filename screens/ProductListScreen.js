@@ -16,9 +16,9 @@ const ProductListScreen = ({ route, navigation }) => {
         const response = await fetch(`${API_BASE_URL}/products/category/${encodeURIComponent(category)}`);
         const json = await response.json();
         setProducts(json);
+        setLoading(false);
       } catch (error) {
         console.error('Error fetching products:', error);
-      } finally {
         setLoading(false);
       }
     };
@@ -68,9 +68,6 @@ const ProductListScreen = ({ route, navigation }) => {
           contentContainerStyle={styles.list}
         />
       )}
-      <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
-        <Text style={styles.backButtonText}>Back</Text>
-      </TouchableOpacity>
     </SafeAreaView>
   );
 };
@@ -131,19 +128,6 @@ const styles = StyleSheet.create({
   addToCartButtonText: {
     color: '#fff',
     fontSize: 14,
-    fontWeight: 'bold',
-  },
-  backButton: {
-    backgroundColor: '#007BFF',
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 5,
-    alignSelf: 'center',
-    marginVertical: 10,
-  },
-  backButtonText: {
-    color: '#fff',
-    fontSize: 16,
     fontWeight: 'bold',
   },
 });

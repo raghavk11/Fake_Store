@@ -7,8 +7,6 @@ import SplashScreen from './screens/SplashScreen';
 import SignInScreen from './screens/SignInScreen';
 import SignUpScreen from './screens/SignUpScreen';
 import BottomNav from './BottomNav';
-import ProductListScreen from './screens/ProductListScreen';
-import ProductDetailScreen from './screens/ProductDetailScreen';
 
 const Stack = createStackNavigator();
 
@@ -21,8 +19,6 @@ function App() {
           <Stack.Screen name="SignIn" component={SignInScreen} />
           <Stack.Screen name="SignUp" component={SignUpScreen} />
           <Stack.Screen name="MainApp" component={BottomNav} />
-          <Stack.Screen name="ProductListScreen" component={ProductListScreen} />
-          <Stack.Screen name="ProductDetailScreen" component={ProductDetailScreen} />
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>

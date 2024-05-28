@@ -1,7 +1,8 @@
 import React, { useEffect } from 'react';
 import { View, Text, FlatList, TouchableOpacity, StyleSheet, Image, SafeAreaView, Alert } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
-import { incrementQuantity, decrementQuantity, removeItem } from '../Features/Cart/CartSlice';
+import { incrementQuantity, decrementQuantity, removeItem, uploadCart } from '../Features/Cart/CartSlice';
+import { addOrder } from '../OrdersSlice';
 import { selectIsLoggedIn } from '../Features/Auth/AuthSlice';
 import { API_BASE_URL } from '../config';
 
@@ -12,12 +13,7 @@ const CartScreen = ({ navigation }) => {
 
   useEffect(() => {
     if (!isLoggedIn) {
-      Alert.alert('Please sign in', 'You need to be logged in to access this screen.', [
-        {
-          text: 'Sign In',
-          onPress: () => navigation.navigate('SignInScreen'),
-        },
-      ]);
+      navigation.navigate('SignInScreen');
     }
   }, [isLoggedIn, navigation]);
 
@@ -59,22 +55,31 @@ const CartScreen = ({ navigation }) => {
 
   const handleCheckout = async () => {
     try {
-      const response = await fetch(`${API_BASE_URL}/orders`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          items: cartItems,
-          total: getTotalPrice(),
-        }),
-      });
-      const data = await response.json();
-      Alert.alert('Order Created', `Your order has been created with ID: ${data.id}`);
-      // Clear the cart after successful checkout
+      const order = {
+        id: new Date().getTime().toString(),
+        items: cartItems,
+        total: getTotalPrice(),
+      };
+
+      await dispatch(uploadCart(cartItems)).unwrap();
+
+      dispatch(addOrder(order));
+
       cartItems.forEach((item) => dispatch(removeItem(item.id)));
+
+      Alert.alert('Checkout Successful', 'New order has been created', [
+        {
+          text: 'OK',
+          onPress: () => navigation.navigate('OrdersTab'),
+        },
+      ]);
     } catch (error) {
       console.error('Error creating order:', error);
+      Alert.alert('Checkout Failed', 'An error occurred while creating the order', [
+        {
+          text: 'OK',
+        },
+      ]);
     }
   };
 

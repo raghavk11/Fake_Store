@@ -6,55 +6,40 @@ import CategoryScreen from './screens/CategoryScreen';
 import CartScreen from './screens/CartScreen';
 import OrdersScreen from './screens/OrdersScreen';
 import ProfileScreen from './screens/ProfileScreen';
+import ProductListScreen from './screens/ProductListScreen';
+import ProductDetailScreen from './screens/ProductDetailScreen';
 import { selectCartItemsCount } from './Features/Cart/CartSlice';
 import { selectIsLoggedIn } from './Features/Auth/AuthSlice';
-import { Alert } from 'react-native';
+import { createStackNavigator } from '@react-navigation/stack';
 
 const Tab = createBottomTabNavigator();
+const ProductStack = createStackNavigator();
+
+const ProductStackNavigator = () => {
+  return (
+    <ProductStack.Navigator screenOptions={{ headerShown: false }}>
+      <ProductStack.Screen name="CategoryScreen" component={CategoryScreen} />
+      <ProductStack.Screen name="ProductListScreen" component={ProductListScreen} />
+      <ProductStack.Screen name="ProductDetailScreen" component={ProductDetailScreen} />
+    </ProductStack.Navigator>
+  );
+};
 
 const BottomNav = () => {
   const cartItemCount = useSelector(selectCartItemsCount);
   const isLoggedIn = useSelector(selectIsLoggedIn);
 
-  const showLoginAlert = () => {
-    Alert.alert(
-      'Login Required',
-      'You need to log in to access this feature.',
-      [
-        {
-          text: 'Cancel',
-          style: 'cancel',
-        },
-        {
-          text: 'Log In',
-          onPress: () => {
-            // No need to navigate, as the AuthNavigator will handle it
-          },
-        },
-      ],
-      { cancelable: false }
-    );
-  };
-
   return (
     <Tab.Navigator screenOptions={{ headerShown: false }}>
       <Tab.Screen
         name="ProductsTab"
-        component={CategoryScreen}
+        component={ProductStackNavigator}
         options={{
           tabBarLabel: 'Products',
           tabBarIcon: ({ color, size }) => (
             <MaterialIcons name="store" size={size} color={color} />
           ),
         }}
-        listeners={({ navigation }) => ({
-          tabPress: (e) => {
-            if (!isLoggedIn) {
-              e.preventDefault();
-              showLoginAlert();
-            }
-          },
-        })}
       />
       <Tab.Screen
         name="CartTab"
@@ -66,14 +51,6 @@ const BottomNav = () => {
           ),
           tabBarBadge: isLoggedIn && cartItemCount > 0 ? cartItemCount : null,
         }}
-        listeners={({ navigation }) => ({
-          tabPress: (e) => {
-            if (!isLoggedIn) {
-              e.preventDefault();
-              showLoginAlert();
-            }
-          },
-        })}
       />
       <Tab.Screen
         name="OrdersTab"
@@ -84,14 +61,6 @@ const BottomNav = () => {
             <MaterialIcons name="list-alt" size={size} color={color} />
           ),
         }}
-        listeners={({ navigation }) => ({
-          tabPress: (e) => {
-            if (!isLoggedIn) {
-              e.preventDefault();
-              showLoginAlert();
-            }
-          },
-        })}
       />
       <Tab.Screen
         name="ProfileTab"

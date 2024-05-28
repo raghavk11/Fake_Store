@@ -4,7 +4,6 @@ import { useDispatch } from 'react-redux';
 import { login } from '../Features/Auth/AuthSlice';
 import { API_BASE_URL } from '../config'; // Import API_BASE_URL from the config file
 
-
 const SignInScreen = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -39,7 +38,7 @@ const SignInScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <View style={styles.formContainer}>
-        <Text style={styles.title}>Sign In Screen</Text>
+        <Text style={styles.title}>Sign In</Text>
         <TextInput
           style={styles.input}
           placeholder="Email"

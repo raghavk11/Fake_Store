@@ -11,10 +11,9 @@ const CategoryScreen = ({ navigation }) => {
 
   useEffect(() => {
     if (!isLoggedIn) {
-      Alert.alert('Please sign in', 'You need to be logged in to access this screen.', [
+      Alert.alert('Sign in successful!', '', [
         {
-          text: 'Sign In',
-          onPress: () => navigation.navigate('SignInScreen'),
+          text: 'OK',
         },
       ]);
       return;
@@ -57,9 +56,6 @@ const CategoryScreen = ({ navigation }) => {
               <Text style={styles.text}>{category.toUpperCase()}</Text>
             </TouchableOpacity>
           ))}
-          <TouchableOpacity style={styles.button}>
-            <Text style={styles.text}>YOUR_NAME</Text>
-          </TouchableOpacity>
         </View>
       )}
     </SafeAreaView>

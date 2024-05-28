@@ -43,26 +43,20 @@ const ProductDetailScreen = ({ route, navigation }) => {
         <View style={styles.header}>
           <Text style={styles.headerText}>PRODUCT DETAILS</Text>
         </View>
-        {loading ? (
-          <ActivityIndicator size="large" color="#0000ff" />
-        ) : (
-          <>
-            <Image source={{ uri: product.image }} style={styles.image} resizeMode="contain" />
-            <Text style={styles.title}>{product.title}</Text>
-            <View style={styles.detailContainer}>
-              <DetailItem icon="star" text={`Rate: ${product.rating.rate}`} />
-              <DetailItem icon="shopping-bag" text={`Sold: ${product.rating.count}`} />
-              <DetailItem icon="dollar" text={`Price: $${product.price}`} />
-            </View>
-            <ButtonRow navigation={navigation} onAddToCart={handleAddToCart} />
-            <Text style={styles.descriptionTitle}>Description:</Text>
-            <View style={styles.descriptionContainer}>
-              <ScrollView style={styles.descriptionScrollView}>
-                <Text style={styles.description}>{product.description}</Text>
-              </ScrollView>
-            </View>
-          </>
-        )}
+        <Image source={{ uri: product.image }} style={styles.image} resizeMode="contain" />
+        <Text style={styles.title}>{product.title}</Text>
+        <View style={styles.detailContainer}>
+          <DetailItem icon="star" text={`Rate: ${product.rating.rate}`} />
+          <DetailItem icon="shopping-bag" text={`Sold: ${product.rating.count}`} />
+          <DetailItem icon="dollar" text={`Price: $${product.price}`} />
+        </View>
+        <ButtonRow navigation={navigation} onAddToCart={handleAddToCart} />
+        <Text style={styles.descriptionTitle}>Description:</Text>
+        <View style={styles.descriptionContainer}>
+          <ScrollView style={styles.descriptionScrollView}>
+            <Text style={styles.description}>{product.description}</Text>
+          </ScrollView>
+        </View>
       </ScrollView>
     </SafeAreaView>
   );
