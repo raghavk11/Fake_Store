@@ -4,25 +4,11 @@ import { useDispatch } from 'react-redux';
 import { addItem } from '../Features/Cart/CartSlice';
 import { API_BASE_URL } from '../config';
 
-const ButtonRow = ({ navigation, product }) => {
-  const dispatch = useDispatch();
-
-  const handleAddToCart = () => {
-    dispatch(addItem(product));
-  };
-
-  return (
-    <View style={styles.buttonContainer}>
-      <Button icon="arrow-left" text="Back" color="#1E90FF" onPress={() => navigation.goBack()} />
-      <Button icon="shopping-cart" text="Add to Cart" color="#FF4500" onPress={handleAddToCart} />
-    </View>
-  );
-};
-
 const ProductListScreen = ({ route, navigation }) => {
   const { category } = route.params;
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -41,7 +27,11 @@ const ProductListScreen = ({ route, navigation }) => {
   }, [category]);
 
   const handleProductPress = (productId) => {
-    navigation.navigate('ProductDetailScreen', { productId: productId });
+    navigation.navigate('ProductDetailScreen', { productId });
+  };
+
+  const handleAddToCart = (product) => {
+    dispatch(addItem(product));
   };
 
   const renderItem = ({ item }) => (
@@ -53,6 +43,12 @@ const ProductListScreen = ({ route, navigation }) => {
       <View style={styles.infoContainer}>
         <Text style={styles.title}>{item.title}</Text>
         <Text style={styles.price}>{`$${item.price}`}</Text>
+        <TouchableOpacity
+          style={styles.addToCartButton}
+          onPress={() => handleAddToCart(item)}
+        >
+          <Text style={styles.addToCartButtonText}>Add to Cart</Text>
+        </TouchableOpacity>
       </View>
     </TouchableOpacity>
   );
@@ -123,6 +119,32 @@ const styles = StyleSheet.create({
   price: {
     fontSize: 16,
     color: '#888',
+    marginBottom: 10,
+  },
+  addToCartButton: {
+    backgroundColor: '#007BFF',
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+    borderRadius: 5,
+    alignSelf: 'flex-start',
+  },
+  addToCartButtonText: {
+    color: '#fff',
+    fontSize: 14,
+    fontWeight: 'bold',
+  },
+  backButton: {
+    backgroundColor: '#007BFF',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+    alignSelf: 'center',
+    marginVertical: 10,
+  },
+  backButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });
 

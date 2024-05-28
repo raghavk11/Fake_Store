@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, StyleSheet, Button, Alert } from 'react-native';
 import { useDispatch } from 'react-redux';
 import { signup } from '../Features/Auth/AuthSlice';
+import { API_BASE_URL } from '../config'; // Import API_BASE_URL from the config file
+
 
 const SignUpScreen = ({ navigation }) => {
   const [name, setName] = useState('');
@@ -11,11 +13,23 @@ const SignUpScreen = ({ navigation }) => {
 
   const handleSignUp = async () => {
     try {
-      await dispatch(signup({ name, email, password })).unwrap();
-      // Sign-up successful, no need to navigate as the AuthNavigator will handle it
+      const response = await fetch(`${API_BASE_URL}/users/signup`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ name, email, password }),
+      });
+      const data = await response.json();
+      if (data.status === 'OK') {
+        dispatch(signup(data));
+        navigation.replace('MainApp');
+      } else {
+        Alert.alert('Error', data.message || 'An error occurred during sign-up');
+      }
     } catch (error) {
-      // Sign-up failed, show an error message
-      Alert.alert('Error', error.message || 'An error occurred during sign-up');
+      console.error('Error signing up:', error);
+      Alert.alert('Error', 'An error occurred during sign-up');
     }
   };
 

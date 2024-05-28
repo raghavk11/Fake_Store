@@ -36,7 +36,7 @@ const CategoryScreen = ({ navigation }) => {
   }, [isLoggedIn, navigation]);
 
   const handleCategoryPress = (category) => {
-    navigation.navigate('ProductListScreen', { category: category });
+    navigation.navigate('ProductListScreen', { category });
   };
 
   return (
@@ -65,7 +65,6 @@ const CategoryScreen = ({ navigation }) => {
     </SafeAreaView>
   );
 };
-
 
 const styles = StyleSheet.create({
   container: {

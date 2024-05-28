@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux';
 import CategoryScreen from './screens/CategoryScreen';
 import CartScreen from './screens/CartScreen';
 import OrdersScreen from './screens/OrdersScreen';
-import AuthNavigator from './screens/AuthNavigator';
+import ProfileScreen from './screens/ProfileScreen';
 import { selectCartItemsCount } from './Features/Cart/CartSlice';
 import { selectIsLoggedIn } from './Features/Auth/AuthSlice';
 import { Alert } from 'react-native';
@@ -94,8 +94,8 @@ const BottomNav = () => {
         })}
       />
       <Tab.Screen
-        name="AuthTab"
-        component={AuthNavigator}
+        name="ProfileTab"
+        component={ProfileScreen}
         options={{
           tabBarLabel: 'Profile',
           tabBarIcon: ({ color, size }) => (

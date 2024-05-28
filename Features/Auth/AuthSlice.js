@@ -4,40 +4,21 @@ import { API_BASE_URL } from '../../config';
 
 export const login = createAsyncThunk(
   'auth/login',
-  async ({ email, password }, { rejectWithValue }) => {
-    try {
-      const response = await axios.post(`${API_BASE_URL}/auth/login`, {
-        email,
-        password,
-      });
-      return response.data;
-    } catch (error) {
-      if (error.response && error.response.data) {
-        return rejectWithValue(error.response.data);
-      } else {
-        return rejectWithValue(error.message);
-      }
-    }
+  async (userData, { rejectWithValue }) => {
+    return userData;
   }
 );
 
 export const signup = createAsyncThunk(
   'auth/signup',
-  async ({ name, email, password }, { rejectWithValue }) => {
-    try {
-      const response = await axios.post(`${API_BASE_URL}/auth/signup`, {
-        name,
-        email,
-        password,
-      });
-      return response.data;
-    } catch (error) {
-      if (error.response && error.response.data) {
-        return rejectWithValue(error.response.data);
-      } else {
-        return rejectWithValue(error.message);
-      }
-    }
+  async (userData, { rejectWithValue }) => {
+    return userData;
+  }
+);
+export const updateProfile = createAsyncThunk(
+  'auth/updateProfile',
+  async (userData, { rejectWithValue }) => {
+    return userData;
   }
 );
 
@@ -55,9 +36,6 @@ const authSlice = createSlice({
       state.isLoggedIn = false;
       state.loading = false;
       state.error = null;
-    },
-    navigateToSignIn: (state) => {
-      // Do nothing, this action is handled in the navigation middleware
     },
   },
   extraReducers: (builder) => {
@@ -87,27 +65,27 @@ const authSlice = createSlice({
       .addCase(signup.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+      })
+      .addCase(updateProfile.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(updateProfile.fulfilled, (state, action) => {
+        state.user = { ...state.user, ...action.payload };
+        state.loading = false;
+      })
+      .addCase(updateProfile.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
       });
   },
 });
 
-export const { logout, navigateToSignIn } = authSlice.actions;
+export const { logout } = authSlice.actions;
 
 export const selectUser = (state) => state.auth.user;
 export const selectIsLoggedIn = (state) => state.auth.isLoggedIn;
 export const selectLoading = (state) => state.auth.loading;
 export const selectError = (state) => state.auth.error;
-
-const navigationMiddleware = (navigationRef) => (store) => (next) => (action) => {
-  if (action.type === navigateToSignIn.type) {
-    navigationRef.current?.navigate('ProfileTab', { screen: 'SignInScreen' });
-  }
-
-  return next(action);
-};
-
-export const createAuthMiddleware = (navigationRef) => {
-  return navigationMiddleware(navigationRef);
-};
 
 export default authSlice.reducer;

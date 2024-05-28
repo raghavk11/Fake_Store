@@ -68,7 +68,6 @@ const ProductDetailScreen = ({ route, navigation }) => {
   );
 };
 
-
 const DetailItem = ({ icon, text }) => (
   <View style={[styles.detailItem, styles[`${icon}Item`]]}>
     <Icon name={icon} size={20} color="#ffffff" />
@@ -91,102 +90,102 @@ const Button = ({ icon, text, color, onPress }) => (
 );
 
 const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      backgroundColor: '#fff',
-    },
-    scrollContainer: {
-      flexGrow: 1,
-    },
-    header: {
-      backgroundColor: '#007bff',
-      alignItems: 'center',
-      paddingVertical: 10,
-    },
-    headerText: {
-      fontSize: 20,
-      fontWeight: 'bold',
-      color: '#fff',
-      textTransform: 'uppercase',
-    },
-    image: {
-      width: '100%',
-      height: 300,
-      marginTop: 20,
-      marginBottom: 10,
-    },
-    title: {
-      fontSize: 24,
-      fontWeight: 'bold',
-      textAlign: 'center',
-      marginBottom: 10,
-    },
-    detailContainer: {
-      flexDirection: 'row',
-      justifyContent: 'space-around',
-      marginBottom: 20,
-      paddingHorizontal: 20,
-    },
-    detailItem: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      padding: 10,
-      borderRadius: 8,
-    },
-    rateItem: {
-      backgroundColor: '#1E90FF',
-    },
-    soldItem: {
-      backgroundColor: '#1E90FF',
-    },
-    priceItem: {
-      backgroundColor: '#1E90FF',
-    },
-    detailText: {
-      fontSize: 16,
-      fontWeight: 'bold',
-      color: '#ffffff',
-      marginLeft: 5,
-    },
-    buttonContainer: {
-      flexDirection: 'row',
-      justifyContent: 'space-around',
-      borderTopColor: '#cccccc',
-      paddingVertical: 10,
-    },
-    button: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      padding: 15,
-      borderRadius: 5,
-      minWidth: '40%',
-      alignItems: 'center',
-    },
-    buttonText: {
-      color: 'white',
-      fontWeight: 'bold',
-      marginLeft: 5,
-    },
-    descriptionTitle: {
-      fontSize: 18,
-      fontWeight: 'bold',
-      marginBottom: 4,
-      paddingHorizontal: 20,
-    },
-    descriptionContainer: {
-      backgroundColor: '#f0f0f0',
-      padding: 20,
-      borderRadius: 8,
-      marginHorizontal: 20,
-      marginBottom: 20,
-    },
-    descriptionScrollView: {
-      maxHeight: 150,
-    },
-    description: {
-      fontSize: 16,
-      color: '#696969',
-    },
-  });
-  
-  export default ProductDetailScreen;
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+  },
+  scrollContainer: {
+    flexGrow: 1,
+  },
+  header: {
+    backgroundColor: '#007bff',
+    alignItems: 'center',
+    paddingVertical: 10,
+  },
+  headerText: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#fff',
+    textTransform: 'uppercase',
+  },
+  image: {
+    width: '100%',
+    height: 300,
+    marginTop: 20,
+    marginBottom: 10,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginBottom: 10,
+  },
+  detailContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    marginBottom: 20,
+    paddingHorizontal: 20,
+  },
+  detailItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 10,
+    borderRadius: 8,
+  },
+  rateItem: {
+    backgroundColor: '#1E90FF',
+  },
+  soldItem: {
+    backgroundColor: '#1E90FF',
+  },
+  priceItem: {
+    backgroundColor: '#1E90FF',
+  },
+  detailText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#ffffff',
+    marginLeft: 5,
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    borderTopColor: '#cccccc',
+    paddingVertical: 10,
+  },
+  button: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 15,
+    borderRadius: 5,
+    minWidth: '40%',
+    alignItems: 'center',
+  },
+  buttonText: {
+    color: 'white',
+    fontWeight: 'bold',
+    marginLeft: 5,
+  },
+  descriptionTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 4,
+    paddingHorizontal: 20,
+  },
+  descriptionContainer: {
+    backgroundColor: '#f0f0f0',
+    padding: 20,
+    borderRadius: 8,
+    marginHorizontal: 20,
+    marginBottom: 20,
+  },
+  descriptionScrollView: {
+    maxHeight: 150,
+  },
+  description: {
+    fontSize: 16,
+    color: '#696969',
+  },
+});
+
+export default ProductDetailScreen;

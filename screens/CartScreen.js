@@ -3,6 +3,7 @@ import { View, Text, FlatList, TouchableOpacity, StyleSheet, Image, SafeAreaView
 import { useSelector, useDispatch } from 'react-redux';
 import { incrementQuantity, decrementQuantity, removeItem } from '../Features/Cart/CartSlice';
 import { selectIsLoggedIn } from '../Features/Auth/AuthSlice';
+import { API_BASE_URL } from '../config';
 
 const CartScreen = ({ navigation }) => {
   const cartItems = useSelector((state) => state.cart.items);
@@ -41,6 +42,9 @@ const CartScreen = ({ navigation }) => {
           </TouchableOpacity>
         </View>
         <Text style={styles.itemPrice}>${item.price.toFixed(2)}</Text>
+        <TouchableOpacity onPress={() => dispatch(removeItem(item.id))}>
+          <Text style={styles.removeButton}>Remove</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -51,6 +55,27 @@ const CartScreen = ({ navigation }) => {
 
   const getTotalPrice = () => {
     return cartItems.reduce((total, item) => total + item.price * item.quantity, 0).toFixed(2);
+  };
+
+  const handleCheckout = async () => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/orders`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          items: cartItems,
+          total: getTotalPrice(),
+        }),
+      });
+      const data = await response.json();
+      Alert.alert('Order Created', `Your order has been created with ID: ${data.id}`);
+      // Clear the cart after successful checkout
+      cartItems.forEach((item) => dispatch(removeItem(item.id)));
+    } catch (error) {
+      console.error('Error creating order:', error);
+    }
   };
 
   return (
@@ -75,6 +100,9 @@ const CartScreen = ({ navigation }) => {
             keyExtractor={(item) => item.id.toString()}
             contentContainerStyle={styles.cartList}
           />
+          <TouchableOpacity style={styles.checkoutButton} onPress={handleCheckout}>
+            <Text style={styles.checkoutButtonText}>Check Out</Text>
+          </TouchableOpacity>
         </>
       )}
     </SafeAreaView>
@@ -155,6 +183,20 @@ const styles = StyleSheet.create({
   itemPrice: {
     fontSize: 16,
     color: '#888',
+  },
+  checkoutButton: {
+    backgroundColor: '#007BFF',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+    alignSelf: 'center',
+    marginTop: 20,
+    marginBottom: 10,
+  },
+  checkoutButtonText: {
+    color: '#fff',
+    fontSize: 18,
+    fontWeight: 'bold',
   },
 });
 

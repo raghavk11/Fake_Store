@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, StyleSheet, Button, Alert } from 'react-native';
 import { useDispatch } from 'react-redux';
 import { login } from '../Features/Auth/AuthSlice';
+import { API_BASE_URL } from '../config'; // Import API_BASE_URL from the config file
+
 
 const SignInScreen = ({ navigation }) => {
   const [email, setEmail] = useState('');
@@ -10,11 +12,23 @@ const SignInScreen = ({ navigation }) => {
 
   const handleSignIn = async () => {
     try {
-      await dispatch(login({ email, password })).unwrap();
-      // Sign-in successful, no need to navigate as the AuthNavigator will handle it
+      const response = await fetch(`${API_BASE_URL}/users/signin`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
+      const data = await response.json();
+      if (data.status === 'OK') {
+        dispatch(login(data));
+        navigation.replace('MainApp');
+      } else {
+        Alert.alert('Error', data.message || 'An error occurred during sign-in');
+      }
     } catch (error) {
-      // Sign-in failed, show an error message
-      Alert.alert('Error', 'Wrong email or password');
+      console.error('Error signing in:', error);
+      Alert.alert('Error', 'An error occurred during sign-in');
     }
   };
 
