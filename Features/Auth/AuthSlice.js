@@ -5,20 +5,21 @@ import { API_BASE_URL } from '../../config';
 export const login = createAsyncThunk(
   'auth/login',
   async (userData, { rejectWithValue }) => {
-    return userData;
+    return userData;  // Replace with actual API call
   }
 );
 
 export const signup = createAsyncThunk(
   'auth/signup',
   async (userData, { rejectWithValue }) => {
-    return userData;
+    return userData;  // Replace with actual API call
   }
 );
+
 export const updateProfile = createAsyncThunk(
   'auth/updateProfile',
   async (userData, { rejectWithValue }) => {
-    return userData;
+    return userData;  // Replace with actual API call
   }
 );
 
@@ -82,10 +83,8 @@ const authSlice = createSlice({
 });
 
 export const { logout } = authSlice.actions;
-
 export const selectUser = (state) => state.auth.user;
 export const selectIsLoggedIn = (state) => state.auth.isLoggedIn;
 export const selectLoading = (state) => state.auth.loading;
 export const selectError = (state) => state.auth.error;
-
 export default authSlice.reducer;

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, FlatList, Image, Alert, SafeAreaView } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
-import { fetchOrders, updateOrderStatus } from '../Features/Orders/OrdersSlice';
+import { fetchOrders, updateOrderStatus } from '../Features/Orders/OrdersSlice'; // Ensure correct import
 import { MaterialIcons } from '@expo/vector-icons';
 
 const OrdersScreen = () => {
@@ -16,7 +16,7 @@ const OrdersScreen = () => {
 
   const toggleOrderExpansion = (orderId) => {
     if (expandedOrders.includes(orderId)) {
-      setExpandedOrders(expandedOrders.filter((id) => id !==orderId));
+      setExpandedOrders(expandedOrders.filter((id) => id !== orderId));
     } else {
       setExpandedOrders([...expandedOrders, orderId]);
     }
