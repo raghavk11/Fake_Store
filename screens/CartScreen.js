@@ -1,4 +1,3 @@
-// Imports
 import React, { useEffect } from 'react';
 import { View, Text, FlatList, TouchableOpacity, StyleSheet, Image, SafeAreaView, Alert } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
@@ -6,9 +5,10 @@ import { incrementQuantity, decrementQuantity, removeItem, uploadCart } from '..
 import { addOrder } from '../Features/Orders/OrdersSlice';
 import { selectIsLoggedIn } from '../Features/Auth/AuthSlice';
 
-// Component
 const CartScreen = ({ navigation }) => {
   const cartItems = useSelector((state) => state.cart.items);
+  const cartStatus = useSelector((state) => state.cart.status);
+  const cartError = useSelector((state) => state.cart.error);
   const isLoggedIn = useSelector(selectIsLoggedIn);
   const dispatch = useDispatch();
 
@@ -51,11 +51,11 @@ const CartScreen = ({ navigation }) => {
         total: getTotalPrice(),
         status: 'new',
       };
-  
+
       await dispatch(uploadCart(cartItems)).unwrap();
       dispatch(addOrder(order));
       cartItems.forEach((item) => dispatch(removeItem(item.id)));
-  
+
       Alert.alert('Checkout Successful', 'New order has been created', [
         { text: 'OK', onPress: () => navigation.navigate('OrdersTab') },
       ]);
@@ -67,7 +67,15 @@ const CartScreen = ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      {cartItems.length === 0 ? (
+      {cartStatus === 'loading' ? (
+        <View style={styles.loadingContainer}>
+          <Text>Loading...</Text>
+        </View>
+      ) : cartError ? (
+        <View style={styles.errorContainer}>
+          <Text>{cartError}</Text>
+        </View>
+      ) : cartItems.length === 0 ? (
         <View style={styles.emptyContainer}>
           <Text style={styles.emptyMessage}>Your shopping cart is empty</Text>
         </View>
@@ -87,9 +95,10 @@ const CartScreen = ({ navigation }) => {
   );
 };
 
-// Styles
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#fff' },
+  loadingContainer: { flex: 1, justifyContent: 'center', alignItems: 'center' },
+  errorContainer: { flex: 1, justifyContent: 'center', alignItems: 'center' },
   emptyContainer: { flex: 1, justifyContent: 'center', alignItems: 'center' },
   emptyMessage: { fontSize: 18, color: '#888' },
   cartHeader: { flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 20, paddingVertical: 10, borderBottomWidth: 1, borderBottomColor: '#ccc', backgroundColor: '#f9f9f9' },

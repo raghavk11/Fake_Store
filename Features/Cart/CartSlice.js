@@ -32,6 +32,8 @@ const cartSlice = createSlice({
   name: 'cart',
   initialState: {
     items: [],
+    status: 'idle',
+    error: null,
   },
   reducers: {
     addItem: (state, action) => {
@@ -71,12 +73,16 @@ const cartSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      .addCase(uploadCart.pending, (state) => {
+        state.status = 'loading';
+      })
       .addCase(uploadCart.fulfilled, (state) => {
+        state.status = 'succeeded';
         state.items = [];
       })
-      .addCase(removeItem, (state, action) => {
-        const itemId = action.payload;
-        state.items = state.items.filter((item) => item.id !== itemId);
+      .addCase(uploadCart.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.payload;
       });
   },
 });

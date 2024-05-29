@@ -35,8 +35,8 @@ const OrdersScreen = () => {
       await dispatch(updateOrderStatus({ orderId, status: 'paid' })).unwrap();
       Alert.alert('Order Paid', 'Your order is paid');
     } catch (error) {
-      console.error('Error paying order:', error);
-      Alert.alert('Payment Failed', 'An error occurred while paying the order');
+      console.error('Error paying order:', error.message);
+      Alert.alert('Payment Failed', `An error occurred while paying the order: ${error.message}`);
     }
   };
 
@@ -45,8 +45,8 @@ const OrdersScreen = () => {
       await dispatch(updateOrderStatus({ orderId, status: 'delivered' })).unwrap();
       Alert.alert('Order Delivered', 'Your order is delivered');
     } catch (error) {
-      console.error('Error receiving order:', error);
-      Alert.alert('Delivery Failed', 'An error occurred while marking the order as delivered');
+      console.error('Error receiving order:', error.message);
+      Alert.alert('Delivery Failed', `An error occurred while marking the order as delivered: ${error.message}`);
     }
   };
 
