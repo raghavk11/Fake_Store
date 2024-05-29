@@ -1,15 +1,17 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { API_BASE_URL } from '../../config';
 
-// Define the async thunk for fetching orders
+const initialState = {
+  orders: [],
+  status: 'idle',
+  error: null,
+};
+
 export const fetchOrders = createAsyncThunk(
   'orders/fetchOrders',
   async (_, { rejectWithValue }) => {
     try {
       const response = await fetch(`${API_BASE_URL}/orders/all`);
-      if (!response.ok) {
-        throw new Error('Failed to fetch orders');
-      }
       const data = await response.json();
       return data;
     } catch (error) {
@@ -18,27 +20,14 @@ export const fetchOrders = createAsyncThunk(
   }
 );
 
-// Define the async thunk for updating order status
 export const updateOrderStatus = createAsyncThunk(
   'orders/updateOrderStatus',
-  async ({ orderId, status }, { rejectWithValue }) => {
+  async ({ orderId, status }, { rejectWithValue, dispatch }) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/orders/updateorder`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ id: orderId, status }),
-      });
-
-      if (!response.ok) {
-        const errorDetails = await response.json();
-        throw new Error(`Failed to update order status: ${errorDetails.message}`);
-      }
-
-      const data = await response.json();
-      return { orderId, status: data.status };
+      dispatch(updateOrder({ orderId, status }));
+      return { orderId, status };
     } catch (error) {
+      console.log('Error updating order status:', error);
       return rejectWithValue(error.message);
     }
   }
@@ -46,15 +35,25 @@ export const updateOrderStatus = createAsyncThunk(
 
 const ordersSlice = createSlice({
   name: 'orders',
-  initialState: {
-    orders: [],
-    status: 'idle',
-    error: null,
-  },
+  initialState,
   reducers: {
     addOrder: (state, action) => {
-      const newOrder = { ...action.payload, status: 'new' };
-      state.orders.push(newOrder);
+      if (Array.isArray(state.orders)) {
+        state.orders.push(action.payload);
+      } else {
+        state.orders = [action.payload];
+      }
+    },
+    updateOrder: (state, action) => {
+      const { orderId, status } = action.payload;
+      const existingOrder = state.orders.find((order) => order.id === orderId);
+      if (existingOrder) {
+        console.log('Updating order status:', orderId, status);
+        existingOrder.status = status;
+        console.log('Updated order:', existingOrder);
+      } else {
+        console.log('Order not found:', orderId);
+      }
     },
   },
   extraReducers: (builder) => {
@@ -73,12 +72,7 @@ const ordersSlice = createSlice({
       .addCase(updateOrderStatus.pending, (state) => {
         state.status = 'loading';
       })
-      .addCase(updateOrderStatus.fulfilled, (state, action) => {
-        const { orderId, status } = action.payload;
-        const existingOrder = state.orders.find((order) => order.id === orderId);
-        if (existingOrder) {
-          existingOrder.status = status;
-        }
+      .addCase(updateOrderStatus.fulfilled, (state) => {
         state.status = 'succeeded';
       })
       .addCase(updateOrderStatus.rejected, (state, action) => {
@@ -88,7 +82,7 @@ const ordersSlice = createSlice({
   },
 });
 
-export const { addOrder } = ordersSlice.actions;
+export const { addOrder, updateOrder } = ordersSlice.actions;
 
 export const selectOrders = (state) => state.orders.orders;
 
