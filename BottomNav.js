@@ -55,17 +55,17 @@ const BottomNav = () => {
         }}
       />
       <Tab.Screen
-  name="OrdersTab"
-  component={OrdersScreen}
-  options={{
-    tabBarLabel: 'My Orders',
-    tabBarIcon: ({ color, size }) => (
-      <MaterialIcons name="list-alt" size={size} color={color} />
-    ),
-    tabBarBadge: isLoggedIn && orders.length > 0 ? orders.length : null,
-    tabBarBadgeStyle: { backgroundColor: 'red' },
-  }}
-/>
+        name="OrdersTab"
+        component={OrdersScreen}
+        options={{
+          tabBarLabel: 'My Orders',
+          tabBarIcon: ({ color, size }) => (
+            <MaterialIcons name="list-alt" size={size} color={color} />
+          ),
+          tabBarBadge: isLoggedIn && orders.length > 0 ? orders.length : null,
+          tabBarBadgeStyle: { backgroundColor: 'red' },
+        }}
+      />
       <Tab.Screen
         name="ProfileTab"
         component={ProfileScreen}

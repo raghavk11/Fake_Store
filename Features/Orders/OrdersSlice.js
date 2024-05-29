@@ -70,12 +70,20 @@ const ordersSlice = createSlice({
         state.status = 'failed';
         state.error = action.payload;
       })
+      .addCase(updateOrderStatus.pending, (state) => {
+        state.status = 'loading';
+      })
       .addCase(updateOrderStatus.fulfilled, (state, action) => {
         const { orderId, status } = action.payload;
         const existingOrder = state.orders.find((order) => order.id === orderId);
         if (existingOrder) {
           existingOrder.status = status;
         }
+        state.status = 'succeeded';
+      })
+      .addCase(updateOrderStatus.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.payload;
       });
   },
 });

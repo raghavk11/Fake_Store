@@ -1,18 +1,28 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, Button, TextInput, Alert } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, TextInput, Alert, TouchableOpacity } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout, updateProfile } from '../Features/Auth/AuthSlice';
 import { API_BASE_URL } from '../config';
+import Icon from 'react-native-vector-icons/MaterialIcons';
+import { useNavigation } from '@react-navigation/native';
 
 const ProfileScreen = () => {
   const dispatch = useDispatch();
+  const navigation = useNavigation();
   const user = useSelector((state) => state.auth.user);
   const [isUpdating, setIsUpdating] = useState(false);
-  const [name, setName] = useState(user.name);
+  const [name, setName] = useState(user?.name || ''); // Handle potential null user
   const [password, setPassword] = useState('');
+
+  useEffect(() => {
+    if (!user) {
+      navigation.replace('SignIn'); // Redirect to SignIn if user is not logged in
+    }
+  }, [user, navigation]);
 
   const handleLogout = () => {
     dispatch(logout());
+    navigation.replace('SignIn');
   };
 
   const handleUpdate = () => {
@@ -49,6 +59,10 @@ const ProfileScreen = () => {
     setPassword('');
   };
 
+  if (!user) {
+    return null; // Render nothing if user is not logged in
+  }
+
   return (
     <View style={styles.container}>
       {isUpdating ? (
@@ -67,8 +81,14 @@ const ProfileScreen = () => {
             secureTextEntry
           />
           <View style={styles.buttonContainer}>
-            <Button title="Confirm" onPress={handleConfirm} />
-            <Button title="Cancel" onPress={handleCancel} />
+            <TouchableOpacity style={styles.iconButton} onPress={handleConfirm}>
+              <Icon name="check" size={24} color="#fff" />
+              <Text style={styles.iconButtonText}>Confirm</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.iconButton} onPress={handleCancel}>
+              <Icon name="cancel" size={24} color="#fff" />
+              <Text style={styles.iconButtonText}>Cancel</Text>
+            </TouchableOpacity>
           </View>
         </View>
       ) : (
@@ -78,8 +98,14 @@ const ProfileScreen = () => {
           <Text style={styles.label}>Email:</Text>
           <Text style={styles.info}>{user.email}</Text>
           <View style={styles.buttonContainer}>
-            <Button title="Update" onPress={handleUpdate} />
-            <Button title="Sign Out" onPress={handleLogout} />
+            <TouchableOpacity style={styles.iconButton} onPress={handleUpdate}>
+              <Icon name="edit" size={24} color="#fff" />
+              <Text style={styles.iconButtonText}>Update</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.iconButton} onPress={handleLogout}>
+              <Icon name="logout" size={24} color="#fff" />
+              <Text style={styles.iconButtonText}>Sign Out</Text>
+            </TouchableOpacity>
           </View>
         </View>
       )}
@@ -132,6 +158,20 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     marginTop: 20,
+  },
+  iconButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#007BFF',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+    marginHorizontal: 5,
+  },
+  iconButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    marginLeft: 5,
   },
 });
 
