@@ -45,13 +45,20 @@ const CartScreen = ({ navigation }) => {
 
   const handleCheckout = async () => {
     try {
-      const order = { id: new Date().getTime().toString(), items: cartItems, total: getTotalPrice() };
-
+      const order = {
+        id: new Date().getTime().toString(),
+        items: cartItems,
+        total: getTotalPrice(),
+        status: 'new',
+      };
+  
       await dispatch(uploadCart(cartItems)).unwrap();
       dispatch(addOrder(order));
       cartItems.forEach((item) => dispatch(removeItem(item.id)));
-
-      Alert.alert('Checkout Successful', 'New order has been created', [{ text: 'OK', onPress: () => navigation.navigate('OrdersTab') }]);
+  
+      Alert.alert('Checkout Successful', 'New order has been created', [
+        { text: 'OK', onPress: () => navigation.navigate('OrdersTab') },
+      ]);
     } catch (error) {
       console.error('Error creating order:', error);
       Alert.alert('Checkout Failed', 'An error occurred while creating the order', [{ text: 'OK' }]);

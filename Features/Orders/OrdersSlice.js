@@ -22,12 +22,13 @@ const ordersSlice = createSlice({
   name: 'orders',
   initialState: {
     orders: [],
-    status: 'idle', // 'idle' | 'loading' | 'succeeded' | 'failed'
+    status: 'idle',
     error: null,
   },
   reducers: {
     addOrder: (state, action) => {
-      state.orders.push(action.payload);
+      const newOrder = { ...action.payload, status: 'new' };
+      state.orders.push(newOrder);
     },
   },
   extraReducers: (builder) => {
@@ -45,6 +46,30 @@ const ordersSlice = createSlice({
       });
   },
 });
+
+export const updateOrderStatus = createAsyncThunk(
+  'orders/updateOrderStatus',
+  async ({ orderId, status }, { rejectWithValue }) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/orders/${orderId}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ status }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to update order status');
+      }
+
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
 
 export const { addOrder } = ordersSlice.actions;
 

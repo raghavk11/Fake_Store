@@ -11,6 +11,7 @@ import ProductDetailScreen from './screens/ProductDetailScreen';
 import { selectCartItemsCount } from './Features/Cart/CartSlice';
 import { selectIsLoggedIn } from './Features/Auth/AuthSlice';
 import { createStackNavigator } from '@react-navigation/stack';
+import { selectOrders } from './Features/Orders/OrdersSlice';
 
 const Tab = createBottomTabNavigator();
 const ProductStack = createStackNavigator();
@@ -28,6 +29,7 @@ const ProductStackNavigator = () => {
 const BottomNav = () => {
   const cartItemCount = useSelector(selectCartItemsCount);
   const isLoggedIn = useSelector(selectIsLoggedIn);
+  const orders = useSelector(selectOrders);
 
   return (
     <Tab.Navigator screenOptions={{ headerShown: false }}>
@@ -53,15 +55,17 @@ const BottomNav = () => {
         }}
       />
       <Tab.Screen
-        name="OrdersTab"
-        component={OrdersScreen}
-        options={{
-          tabBarLabel: 'My Orders',
-          tabBarIcon: ({ color, size }) => (
-            <MaterialIcons name="list-alt" size={size} color={color} />
-          ),
-        }}
-      />
+  name="OrdersTab"
+  component={OrdersScreen}
+  options={{
+    tabBarLabel: 'My Orders',
+    tabBarIcon: ({ color, size }) => (
+      <MaterialIcons name="list-alt" size={size} color={color} />
+    ),
+    tabBarBadge: isLoggedIn && orders.length > 0 ? orders.length : null,
+    tabBarBadgeStyle: { backgroundColor: 'red' },
+  }}
+/>
       <Tab.Screen
         name="ProfileTab"
         component={ProfileScreen}

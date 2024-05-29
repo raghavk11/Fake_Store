@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, FlatList, Image, Alert, SafeAreaView } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
-import { fetchOrders, updateOrderStatus } from '../Features/Orders/OrdersSlice'; // Ensure correct import
+import { fetchOrders, updateOrderStatus } from '../Features/Orders/OrdersSlice';
 import { MaterialIcons } from '@expo/vector-icons';
 
 const OrdersScreen = () => {
@@ -15,19 +15,19 @@ const OrdersScreen = () => {
   }, [dispatch]);
 
   const toggleOrderExpansion = (orderId) => {
-    if (expandedOrders.includes(orderId)) {
-      setExpandedOrders(expandedOrders.filter((id) => id !== orderId));
-    } else {
-      setExpandedOrders([...expandedOrders, orderId]);
-    }
+    setExpandedOrders((prevExpandedOrders) =>
+      prevExpandedOrders.includes(orderId)
+        ? prevExpandedOrders.filter((id) => id !== orderId)
+        : [...prevExpandedOrders, orderId]
+    );
   };
 
   const toggleStatusExpansion = (status) => {
-    if (expandedStatuses.includes(status)) {
-      setExpandedStatuses(expandedStatuses.filter((s) => s !== status));
-    } else {
-      setExpandedStatuses([...expandedStatuses, status]);
-    }
+    setExpandedStatuses((prevExpandedStatuses) =>
+      prevExpandedStatuses.includes(status)
+        ? prevExpandedStatuses.filter((s) => s !== status)
+        : [...prevExpandedStatuses, status]
+    );
   };
 
   const handlePayOrder = async (orderId) => {
@@ -50,6 +50,14 @@ const OrdersScreen = () => {
     }
   };
 
+  const renderOrderProduct = ({ item: product, index }) => (
+    <View key={index} style={styles.productContainer}>
+      <Image source={{ uri: product.image }} style={styles.productImage} />
+      <Text style={styles.productTitle}>{product.title}</Text>
+      <Text style={styles.productQuantity}>Quantity: {product.quantity}</Text>
+    </View>
+  );
+
   const renderOrder = ({ item: order }) => (
     <View style={styles.orderContainer}>
       <TouchableOpacity onPress={() => toggleOrderExpansion(order.id)}>
@@ -68,13 +76,11 @@ const OrdersScreen = () => {
       </TouchableOpacity>
       {expandedOrders.includes(order.id) && (
         <View style={styles.expandedOrderDetails}>
-          {order.items.map((item, index) => (
-            <View key={index} style={styles.productContainer}>
-              <Image source={{ uri: item.image }} style={styles.productImage} />
-              <Text style={styles.productTitle}>{item.title}</Text>
-              <Text style={styles.productQuantity}>Quantity: {item.quantity}</Text>
-            </View>
-          ))}
+          <FlatList
+            data={order.items}
+            renderItem={renderOrderProduct}
+            keyExtractor={(item, index) => index.toString()}
+          />
           {order.status === 'new' && (
             <TouchableOpacity style={styles.button} onPress={() => handlePayOrder(order.id)}>
               <Text style={styles.buttonText}>Pay</Text>
