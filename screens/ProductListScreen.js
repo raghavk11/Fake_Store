@@ -3,6 +3,7 @@ import { View, Text, FlatList, TouchableOpacity, StyleSheet, Image, SafeAreaView
 import { useDispatch } from 'react-redux';
 import { addItem } from '../Features/Cart/CartSlice';
 import { API_BASE_URL } from '../config';
+import { Ionicons } from '@expo/vector-icons';
 
 const ProductListScreen = ({ route, navigation }) => {
   const { category } = route.params;
@@ -35,18 +36,13 @@ const ProductListScreen = ({ route, navigation }) => {
   };
 
   const renderItem = ({ item }) => (
-    <TouchableOpacity
-      style={styles.item}
-      onPress={() => handleProductPress(item.id)}
-    >
+    <TouchableOpacity style={styles.item} onPress={() => handleProductPress(item.id)}>
       <Image source={{ uri: item.image }} style={styles.image} resizeMode="contain" />
       <View style={styles.infoContainer}>
         <Text style={styles.title}>{item.title}</Text>
         <Text style={styles.price}>{`$${item.price}`}</Text>
-        <TouchableOpacity
-          style={styles.addToCartButton}
-          onPress={() => handleAddToCart(item)}
-        >
+        <TouchableOpacity style={styles.addToCartButton} onPress={() => handleAddToCart(item)}>
+          <Ionicons name="cart" size={20} color="#fff" style={styles.addToCartIcon} />
           <Text style={styles.addToCartButtonText}>Add to Cart</Text>
         </TouchableOpacity>
       </View>
@@ -56,10 +52,18 @@ const ProductListScreen = ({ route, navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
+        <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+          <Ionicons name="arrow-back" size={24} color="#fff" />
+        </TouchableOpacity>
         <Text style={styles.headerText}>{category.toUpperCase()}</Text>
+        <TouchableOpacity style={styles.cartButton} onPress={() => navigation.navigate('CartScreen')}>
+          <Ionicons name="cart" size={24} color="#fff" />
+        </TouchableOpacity>
       </View>
       {loading ? (
-        <ActivityIndicator size="large" color="#0000ff" />
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color="#007BFF" />
+        </View>
       ) : (
         <FlatList
           data={products}
@@ -78,9 +82,15 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   header: {
-    backgroundColor: '#007bff',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
+    backgroundColor: '#007BFF',
+    paddingHorizontal: 20,
     paddingVertical: 10,
+  },
+  backButton: {
+    padding: 5,
   },
   headerText: {
     fontSize: 20,
@@ -88,9 +98,17 @@ const styles = StyleSheet.create({
     color: '#fff',
     textTransform: 'uppercase',
   },
+  cartButton: {
+    padding: 5,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   list: {
-    paddingHorizontal: 10,
-    paddingTop: 10,
+    paddingHorizontal: 20,
+    paddingTop: 20,
   },
   item: {
     flexDirection: 'row',
@@ -103,7 +121,8 @@ const styles = StyleSheet.create({
   image: {
     width: 100,
     height: 100,
-    marginRight: 10,
+    marginRight: 20,
+    borderRadius: 10,
   },
   infoContainer: {
     flex: 1,
@@ -111,7 +130,8 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 18,
     fontWeight: 'bold',
-    marginBottom: 5,
+    marginBottom: 10,
+    color: '#333',
   },
   price: {
     fontSize: 16,
@@ -119,14 +139,18 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   addToCartButton: {
-    backgroundColor: '#007BFF',
-    paddingVertical: 5,
-    paddingHorizontal: 10,
+    flexDirection: 'row',
+    backgroundColor: '#FFD700',
+    paddingVertical: 8,
+    paddingHorizontal: 12,
     borderRadius: 5,
     alignSelf: 'flex-start',
   },
+  addToCartIcon: {
+    marginRight: 5,
+  },
   addToCartButtonText: {
-    color: '#fff',
+    color: '#333',
     fontSize: 14,
     fontWeight: 'bold',
   },

@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, StyleSheet, Button, Alert } from 'react-native';
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import { useDispatch } from 'react-redux';
 import { signup } from '../Features/Auth/AuthSlice';
-import { API_BASE_URL } from '../config'; // Import API_BASE_URL from the config file
-
+import { API_BASE_URL } from '../config';
+import { Ionicons } from '@expo/vector-icons';
 
 const SignUpScreen = ({ navigation }) => {
   const [name, setName] = useState('');
@@ -39,19 +39,25 @@ const SignUpScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
+      <View style={styles.headerContainer}>
+        <Ionicons name="person-add" size={80} color="#007BFF" />
+        <Text style={styles.headerText}>Sign Up</Text>
+      </View>
       <View style={styles.formContainer}>
-        <Text style={styles.title}>Sign Up Screen</Text>
         <TextInput
           style={styles.input}
           placeholder="Name"
           value={name}
           onChangeText={setName}
+          autoCapitalize="words"
         />
         <TextInput
           style={styles.input}
           placeholder="Email"
           value={email}
           onChangeText={setEmail}
+          keyboardType="email-address"
+          autoCapitalize="none"
         />
         <TextInput
           style={styles.input}
@@ -60,8 +66,15 @@ const SignUpScreen = ({ navigation }) => {
           value={password}
           onChangeText={setPassword}
         />
-        <Button title="Sign Up" onPress={handleSignUp} />
-        <Button title="Switch to Sign In" onPress={handleSwitchToSignIn} />
+        <TouchableOpacity style={styles.signUpButton} onPress={handleSignUp}>
+          <Text style={styles.signUpButtonText}>Sign Up</Text>
+        </TouchableOpacity>
+      </View>
+      <View style={styles.switchContainer}>
+        <Text style={styles.switchText}>Already have an account?</Text>
+        <TouchableOpacity onPress={handleSwitchToSignIn}>
+          <Text style={styles.switchButtonText}>Sign In</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -72,35 +85,56 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: '#fff',
     paddingHorizontal: 20,
+  },
+  headerContainer: {
+    alignItems: 'center',
+    marginBottom: 30,
+  },
+  headerText: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    color: '#333',
+    marginTop: 10,
   },
   formContainer: {
     width: '100%',
     maxWidth: 400,
-    padding: 20,
-    backgroundColor: '#fff',
-    borderRadius: 10,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 20,
-    textAlign: 'center',
   },
   input: {
-    height: 40,
-    borderColor: 'gray',
+    height: 50,
+    borderColor: '#ccc',
     borderWidth: 1,
-    marginBottom: 10,
-    paddingHorizontal: 10,
+    borderRadius: 5,
+    marginBottom: 20,
+    paddingHorizontal: 15,
+    fontSize: 16,
+    color: '#333',
+  },
+  signUpButton: {
+    backgroundColor: '#007BFF',
+    paddingVertical: 15,
+    borderRadius: 5,
+    alignItems: 'center',
+  },
+  signUpButtonText: {
+    color: '#fff',
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  switchContainer: {
+    flexDirection: 'row',
+    marginTop: 20,
+  },
+  switchText: {
+    fontSize: 16,
+    color: '#333',
+  },
+  switchButtonText: {
+    fontSize: 16,
+    color: '#007BFF',
+    marginLeft: 5,
   },
 });
 

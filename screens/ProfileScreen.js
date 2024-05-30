@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TextInput, Alert, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TextInput, Alert, TouchableOpacity,SafeAreaView } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout, updateProfile } from '../Features/Auth/AuthSlice';
 import { API_BASE_URL } from '../config';
@@ -11,12 +11,13 @@ const ProfileScreen = () => {
   const navigation = useNavigation();
   const user = useSelector((state) => state.auth.user);
   const [isUpdating, setIsUpdating] = useState(false);
-  const [name, setName] = useState(user?.name || ''); // Handle potential null user
+  const [name, setName] = useState(user?.name || '');
   const [password, setPassword] = useState('');
 
   useEffect(() => {
+    // Redirect to SignIn if user is not logged in
     if (!user) {
-      navigation.replace('SignIn'); // Redirect to SignIn if user is not logged in
+      navigation.replace('SignIn');
     }
   }, [user, navigation]);
 
@@ -64,7 +65,10 @@ const ProfileScreen = () => {
   }
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
+      <View style={styles.header}>
+        <Text style={styles.headerText}>Profile</Text>
+      </View>
       {isUpdating ? (
         <View style={styles.formContainer}>
           <Text style={styles.label}>Name:</Text>
@@ -72,6 +76,8 @@ const ProfileScreen = () => {
             style={styles.input}
             value={name}
             onChangeText={setName}
+            placeholder="Enter your name"
+            placeholderTextColor="#888"
           />
           <Text style={styles.label}>Password:</Text>
           <TextInput
@@ -79,13 +85,15 @@ const ProfileScreen = () => {
             value={password}
             onChangeText={setPassword}
             secureTextEntry
+            placeholder="Enter your password"
+            placeholderTextColor="#888"
           />
           <View style={styles.buttonContainer}>
-            <TouchableOpacity style={styles.iconButton} onPress={handleConfirm}>
+            <TouchableOpacity style={[styles.iconButton, styles.confirmButton]} onPress={handleConfirm}>
               <Icon name="check" size={24} color="#fff" />
               <Text style={styles.iconButtonText}>Confirm</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.iconButton} onPress={handleCancel}>
+            <TouchableOpacity style={[styles.iconButton, styles.cancelButton]} onPress={handleCancel}>
               <Icon name="cancel" size={24} color="#fff" />
               <Text style={styles.iconButtonText}>Cancel</Text>
             </TouchableOpacity>
@@ -93,66 +101,76 @@ const ProfileScreen = () => {
         </View>
       ) : (
         <View style={styles.infoContainer}>
-          <Text style={styles.label}>Name:</Text>
-          <Text style={styles.info}>{user.name}</Text>
-          <Text style={styles.label}>Email:</Text>
-          <Text style={styles.info}>{user.email}</Text>
+          <View style={styles.infoItem}>
+            <Text style={styles.label}>Name:</Text>
+            <Text style={styles.info}>{user.name}</Text>
+          </View>
+          <View style={styles.infoItem}>
+            <Text style={styles.label}>Email:</Text>
+            <Text style={styles.info}>{user.email}</Text>
+          </View>
           <View style={styles.buttonContainer}>
-            <TouchableOpacity style={styles.iconButton} onPress={handleUpdate}>
+            <TouchableOpacity style={[styles.iconButton, styles.updateButton]} onPress={handleUpdate}>
               <Icon name="edit" size={24} color="#fff" />
               <Text style={styles.iconButtonText}>Update</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.iconButton} onPress={handleLogout}>
+            <TouchableOpacity style={[styles.iconButton, styles.logoutButton]} onPress={handleLogout}>
               <Icon name="logout" size={24} color="#fff" />
               <Text style={styles.iconButtonText}>Sign Out</Text>
             </TouchableOpacity>
           </View>
         </View>
       )}
-    </View>
-  );
+    </SafeAreaView>
+
+);
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
+    backgroundColor: '#fff',
+  },
+  header: {
+    backgroundColor: '#007BFF',
     alignItems: 'center',
-    padding: 20,
+    paddingVertical: 15,
+    borderBottomWidth: 1,
+    borderBottomColor: '#ccc',
+  },
+  headerText: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#fff',
   },
   formContainer: {
-    width: '100%',
-    maxWidth: 400,
     padding: 20,
-    backgroundColor: '#fff',
-    borderRadius: 10,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
   },
   infoContainer: {
-    alignItems: 'center',
+    padding: 20,
+  },
+  infoItem: {
+    marginBottom: 20,
   },
   label: {
     fontSize: 18,
     fontWeight: 'bold',
     marginBottom: 5,
+    color: '#333',
   },
   info: {
     fontSize: 16,
-    marginBottom: 10,
+    color: '#555',
   },
   input: {
     height: 40,
-    borderColor: 'gray',
+    borderColor: '#ccc',
     borderWidth: 1,
+    borderRadius: 5,
     marginBottom: 10,
     paddingHorizontal: 10,
+    fontSize: 16,
+    color: '#333',
   },
   buttonContainer: {
     flexDirection: 'row',
@@ -162,11 +180,22 @@ const styles = StyleSheet.create({
   iconButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#007BFF',
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 5,
     marginHorizontal: 5,
+  },
+  confirmButton: {
+    backgroundColor: '#28a745',
+  },
+  cancelButton: {
+    backgroundColor: '#dc3545',
+  },
+  updateButton: {
+    backgroundColor: '#007BFF',
+  },
+  logoutButton: {
+    backgroundColor: '#FFD700',
   },
   iconButtonText: {
     color: '#fff',

@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity, StyleSheet, ActivityIndicator, SafeAreaVi
 import { API_BASE_URL } from '../config';
 import { useSelector } from 'react-redux';
 import { selectIsLoggedIn } from '../Features/Auth/AuthSlice';
+import { Ionicons } from '@expo/vector-icons';
 
 const CategoryScreen = ({ navigation }) => {
   const [categories, setCategories] = useState([]);
@@ -10,15 +11,6 @@ const CategoryScreen = ({ navigation }) => {
   const isLoggedIn = useSelector(selectIsLoggedIn);
 
   useEffect(() => {
-    if (!isLoggedIn) {
-      Alert.alert('Sign in successful!', '', [
-        {
-          text: 'OK',
-        },
-      ]);
-      return;
-    }
-
     const fetchCategories = async () => {
       try {
         const response = await fetch(`${API_BASE_URL}/products/categories`);
@@ -32,8 +24,9 @@ const CategoryScreen = ({ navigation }) => {
     };
 
     fetchCategories();
-  }, [isLoggedIn, navigation]);
+  }, []);
 
+  // Handle category press and navigate to ProductListScreen with the selected category
   const handleCategoryPress = (category) => {
     navigation.navigate('ProductListScreen', { category });
   };
@@ -41,19 +34,23 @@ const CategoryScreen = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.headerText}>CATEGORIES</Text>
+        <Text style={styles.headerText}>Categories</Text>
       </View>
       {loading ? (
-        <ActivityIndicator size="large" color="#0000ff" />
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color="#007bff" />
+        </View>
       ) : (
-        <View>
+        <View style={styles.categoriesContainer}>
           {categories.map((category, index) => (
             <TouchableOpacity
               key={index}
-              style={styles.button}
+              style={styles.categoryButton}
               onPress={() => handleCategoryPress(category)}
             >
-              <Text style={styles.text}>{category.toUpperCase()}</Text>
+              <Ionicons name="folder" size={24} color="#007bff" style={styles.categoryIcon} />
+              <Text style={styles.categoryText}>{category.toUpperCase()}</Text>
+              <Ionicons name="arrow-forward" size={24} color="#007bff" style={styles.arrowIcon} />
             </TouchableOpacity>
           ))}
         </View>
@@ -65,33 +62,48 @@ const CategoryScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'flex-start',
     backgroundColor: '#fff',
   },
   header: {
     backgroundColor: '#007bff',
     alignItems: 'center',
-    paddingVertical: 10,
+    paddingVertical: 15,
+    borderBottomWidth: 1,
+    borderBottomColor: '#ccc',
   },
   headerText: {
-    fontSize: 20,
+    fontSize: 24,
     fontWeight: 'bold',
     color: '#fff',
     textTransform: 'uppercase',
   },
-  button: {
-    padding: 15,
-    marginVertical: 5,
-    backgroundColor: '#fff',
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
     alignItems: 'center',
-    borderWidth: 1,
-    borderColor: '#000',
-    borderRadius: 5,
   },
-  text: {
-    color: 'black',
+  categoriesContainer: {
+    paddingHorizontal: 20,
+    paddingTop: 20,
+  },
+  categoryButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 15,
+    borderBottomWidth: 1,
+    borderBottomColor: '#ccc',
+  },
+  categoryIcon: {
+    marginRight: 10,
+  },
+  categoryText: {
+    flex: 1,
     fontSize: 18,
     fontWeight: 'bold',
+    color: '#333',
+  },
+  arrowIcon: {
+    opacity: 0.7,
   },
 });
 

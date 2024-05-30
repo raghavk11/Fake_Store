@@ -34,14 +34,18 @@ const ProductDetailScreen = ({ route, navigation }) => {
   };
 
   if (loading) {
-    return <ActivityIndicator size="large" color="#0000ff" />;
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#007BFF" />
+      </View>
+    );
   }
 
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <View style={styles.header}>
-          <Text style={styles.headerText}>PRODUCT DETAILS</Text>
+          <Text style={styles.headerText}>Product Details</Text>
         </View>
         <Image source={{ uri: product.image }} style={styles.image} resizeMode="contain" />
         <Text style={styles.title}>{product.title}</Text>
@@ -64,40 +68,48 @@ const ProductDetailScreen = ({ route, navigation }) => {
 
 const DetailItem = ({ icon, text }) => (
   <View style={[styles.detailItem, styles[`${icon}Item`]]}>
-    <Icon name={icon} size={20} color="#ffffff" />
+    <Icon name={icon} size={20} color="#fff" />
     <Text style={styles.detailText}>{text}</Text>
   </View>
 );
 
 const ButtonRow = ({ navigation, onAddToCart }) => (
   <View style={styles.buttonContainer}>
-    <Button icon="arrow-left" text="Back" color="#1E90FF" onPress={() => navigation.goBack()} />
-    <Button icon="shopping-cart" text="Add to Cart" color="#FF4500" onPress={onAddToCart} />
+    <Button icon="arrow-left" text="Back" color="#808080" onPress={() => navigation.goBack()} />
+    <Button icon="shopping-cart" text="Add to Cart" color="#FFD700" onPress={onAddToCart} />
   </View>
 );
 
 const Button = ({ icon, text, color, onPress }) => (
   <TouchableOpacity style={[styles.button, { backgroundColor: color }]} onPress={onPress}>
-    <Icon name={icon} size={20} color="white" />
+    <Icon name={icon} size={20} color="#fff" />
     <Text style={styles.buttonText}>{text}</Text>
   </TouchableOpacity>
 );
 
 const styles = StyleSheet.create({
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   container: {
     flex: 1,
     backgroundColor: '#fff',
   },
   scrollContainer: {
     flexGrow: 1,
+    paddingBottom: 20,
   },
   header: {
-    backgroundColor: '#007bff',
+    backgroundColor: '#007BFF',
     alignItems: 'center',
-    paddingVertical: 10,
+    paddingVertical: 15,
+    borderBottomWidth: 1,
+    borderBottomColor: '#ccc',
   },
   headerText: {
-    fontSize: 20,
+    fontSize: 24,
     fontWeight: 'bold',
     color: '#fff',
     textTransform: 'uppercase',
@@ -107,12 +119,15 @@ const styles = StyleSheet.create({
     height: 300,
     marginTop: 20,
     marginBottom: 10,
+    borderRadius: 10,
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
     textAlign: 'center',
     marginBottom: 10,
+    paddingHorizontal: 20,
+    color: '#333',
   },
   detailContainer: {
     flexDirection: 'row',
@@ -124,52 +139,56 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     padding: 10,
-    borderRadius: 8,
+    borderRadius: 5,
   },
-  rateItem: {
-    backgroundColor: '#1E90FF',
+  starItem: {
+    backgroundColor: '#FFD700',
   },
-  soldItem: {
-    backgroundColor: '#1E90FF',
+  'shopping-bagItem': {
+    backgroundColor: '#007BFF',
   },
-  priceItem: {
-    backgroundColor: '#1E90FF',
+  dollarItem: {
+    backgroundColor: '#32CD32',
   },
   detailText: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#ffffff',
+    color: '#fff',
     marginLeft: 5,
   },
   buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'space-around',
-    borderTopColor: '#cccccc',
+    borderTopWidth: 1,
+    borderTopColor: '#ccc',
     paddingVertical: 10,
   },
   button: {
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 15,
+    paddingVertical: 12,
+    paddingHorizontal: 20,
     borderRadius: 5,
     minWidth: '40%',
     alignItems: 'center',
   },
   buttonText: {
-    color: 'white',
+    color: '#fff',
     fontWeight: 'bold',
     marginLeft: 5,
+    fontSize: 16,
   },
   descriptionTitle: {
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: 'bold',
-    marginBottom: 4,
+    marginBottom: 10,
     paddingHorizontal: 20,
+    color: '#333',
   },
   descriptionContainer: {
     backgroundColor: '#f0f0f0',
     padding: 20,
-    borderRadius: 8,
+    borderRadius: 10,
     marginHorizontal: 20,
     marginBottom: 20,
   },
@@ -178,7 +197,8 @@ const styles = StyleSheet.create({
   },
   description: {
     fontSize: 16,
-    color: '#696969',
+    color: '#555',
+    lineHeight: 24,
   },
 });
 

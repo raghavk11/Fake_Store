@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { incrementQuantity, decrementQuantity, removeItem, uploadCart } from '../Features/Cart/CartSlice';
 import { addOrder } from '../Features/Orders/OrdersSlice';
 import { selectIsLoggedIn } from '../Features/Auth/AuthSlice';
+import { Ionicons } from '@expo/vector-icons';
 
 const CartScreen = ({ navigation }) => {
   const cartItems = useSelector((state) => state.cart.items);
@@ -13,6 +14,7 @@ const CartScreen = ({ navigation }) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
+    // Check if the user is logged in, otherwise navigate to SignInScreen
     if (!isLoggedIn) {
       navigation.navigate('SignInScreen');
     }
@@ -25,11 +27,11 @@ const CartScreen = ({ navigation }) => {
         <Text style={styles.itemTitle}>{item.title}</Text>
         <View style={styles.quantityContainer}>
           <TouchableOpacity style={styles.quantityButton} onPress={() => dispatch(decrementQuantity(item.id))}>
-            <Text style={styles.quantityButtonText}>-</Text>
+            <Ionicons name="remove" size={18} color="#fff" />
           </TouchableOpacity>
           <Text style={styles.quantity}>{item.quantity}</Text>
           <TouchableOpacity style={styles.quantityButton} onPress={() => dispatch(incrementQuantity(item.id))}>
-            <Text style={styles.quantityButtonText}>+</Text>
+            <Ionicons name="add" size={18} color="#fff" />
           </TouchableOpacity>
         </View>
         <Text style={styles.itemPrice}>${item.price.toFixed(2)}</Text>
@@ -52,15 +54,18 @@ const CartScreen = ({ navigation }) => {
         status: 'new',
       };
 
+      // Upload the cart items to the server and add the order to the store
       await dispatch(uploadCart(cartItems)).unwrap();
       dispatch(addOrder(order));
       cartItems.forEach((item) => dispatch(removeItem(item.id)));
 
+      // Show a success alert and navigate to the OrdersTab
       Alert.alert('Checkout Successful', 'New order has been created', [
         { text: 'OK', onPress: () => navigation.navigate('OrdersTab') },
       ]);
     } catch (error) {
       console.error('Error creating order:', error);
+      // Show an error alert if the checkout fails
       Alert.alert('Checkout Failed', 'An error occurred while creating the order', [{ text: 'OK' }]);
     }
   };
@@ -69,14 +74,15 @@ const CartScreen = ({ navigation }) => {
     <SafeAreaView style={styles.container}>
       {cartStatus === 'loading' ? (
         <View style={styles.loadingContainer}>
-          <Text>Loading...</Text>
+          <Text style={styles.loadingText}>Loading...</Text>
         </View>
       ) : cartError ? (
         <View style={styles.errorContainer}>
-          <Text>{cartError}</Text>
+          <Text style={styles.errorText}>{cartError}</Text>
         </View>
       ) : cartItems.length === 0 ? (
         <View style={styles.emptyContainer}>
+          <Ionicons name="cart-outline" size={80} color="#ccc" />
           <Text style={styles.emptyMessage}>Your shopping cart is empty</Text>
         </View>
       ) : (
@@ -85,7 +91,12 @@ const CartScreen = ({ navigation }) => {
             <Text style={styles.cartHeaderText}>Total Items: {getTotalQuantity()}</Text>
             <Text style={styles.cartHeaderText}>Total Price: ${getTotalPrice()}</Text>
           </View>
-          <FlatList data={cartItems} renderItem={renderCartItem} keyExtractor={(item) => item.id.toString()} contentContainerStyle={styles.cartList} />
+          <FlatList
+            data={cartItems}
+            renderItem={renderCartItem}
+            keyExtractor={(item) => item.id.toString()}
+            contentContainerStyle={styles.cartList}
+          />
           <TouchableOpacity style={styles.checkoutButton} onPress={handleCheckout}>
             <Text style={styles.checkoutButtonText}>Check Out</Text>
           </TouchableOpacity>
@@ -96,26 +107,121 @@ const CartScreen = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#fff' },
-  loadingContainer: { flex: 1, justifyContent: 'center', alignItems: 'center' },
-  errorContainer: { flex: 1, justifyContent: 'center', alignItems: 'center' },
-  emptyContainer: { flex: 1, justifyContent: 'center', alignItems: 'center' },
-  emptyMessage: { fontSize: 18, color: '#888' },
-  cartHeader: { flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 20, paddingVertical: 10, borderBottomWidth: 1, borderBottomColor: '#ccc', backgroundColor: '#f9f9f9' },
-  cartHeaderText: { fontSize: 16, fontWeight: 'bold' },
-  cartList: { paddingHorizontal: 20, paddingTop: 10 },
-  cartItem: { flexDirection: 'row', alignItems: 'center', marginBottom: 20, paddingBottom: 20, borderBottomWidth: 1, borderBottomColor: '#ccc' },
-  itemImage: { width: 80, height: 80, marginRight: 10 },
-  itemDetails: { flex: 1 },
-  itemTitle: { fontSize: 16, fontWeight: 'bold', marginBottom: 5 },
-  quantityContainer: { flexDirection: 'row', alignItems: 'center', marginBottom: 5 },
-  quantityButton: { backgroundColor: '#ddd', paddingHorizontal: 10, paddingVertical: 5, borderRadius: 5 },
-  quantityButtonText: { fontSize: 18, fontWeight: 'bold' },
-  quantity: { marginHorizontal: 10, fontSize: 16 },
-  itemPrice: { fontSize: 16, color: '#888' },
-  removeButton: { color: '#FF0000', fontWeight: 'bold', marginTop: 5 },
-  checkoutButton: { backgroundColor: '#007BFF', paddingVertical: 10, paddingHorizontal: 20, borderRadius: 5, alignSelf: 'center', marginTop: 20, marginBottom: 10 },
-  checkoutButtonText: { color: '#fff', fontSize: 18, fontWeight: 'bold' },
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  loadingText: {
+    fontSize: 18,
+    color: '#888',
+  },
+  errorContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+  errorText: {
+    fontSize: 18,
+    color: '#f00',
+    textAlign: 'center',
+  },
+  emptyContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  emptyMessage: {
+    fontSize: 18,
+    color: '#888',
+    marginTop: 20,
+  },
+  cartHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: '#ccc',
+    backgroundColor: '#f9f9f9',
+  },
+  cartHeaderText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#333',
+  },
+  cartList: {
+    paddingHorizontal: 20,
+    paddingTop: 10,
+  },
+  cartItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 20,
+    paddingBottom: 20,
+    borderBottomWidth: 1,
+    borderBottomColor: '#ccc',
+  },
+  itemImage: {
+    width: 80,
+    height: 80,
+    marginRight: 10,
+    borderRadius: 10,
+  },
+  itemDetails: {
+    flex: 1,
+  },
+  itemTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginBottom: 5,
+    color: '#333',
+  },
+  quantityContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 5,
+  },
+  quantityButton: {
+    backgroundColor: '#007BFF',
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 5,
+  },
+  quantity: {
+    marginHorizontal: 10,
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#333',
+  },
+  itemPrice: {
+    fontSize: 16,
+    color: '#888',
+  },
+  removeButton: {
+    color: '#FF0000',
+    fontWeight: 'bold',
+    marginTop: 5,
+  },
+  checkoutButton: {
+    backgroundColor: '#FFD700',
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+    alignSelf: 'center',
+    marginTop: 20,
+    marginBottom: 10,
+  },
+  checkoutButtonText: {
+    color: '#333',
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
 });
 
 export default CartScreen;

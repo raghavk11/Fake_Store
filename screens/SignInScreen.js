@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, StyleSheet, Button, Alert } from 'react-native';
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import { useDispatch } from 'react-redux';
 import { login } from '../Features/Auth/AuthSlice';
-import { API_BASE_URL } from '../config'; // Import API_BASE_URL from the config file
+import { API_BASE_URL } from '../config';
+import { Ionicons } from '@expo/vector-icons';
 
 const SignInScreen = ({ navigation }) => {
   const [email, setEmail] = useState('');
@@ -37,13 +38,18 @@ const SignInScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
+      <View style={styles.headerContainer}>
+        <Ionicons name="log-in" size={80} color="#007BFF" />
+        <Text style={styles.headerText}>Sign In</Text>
+      </View>
       <View style={styles.formContainer}>
-        <Text style={styles.title}>Sign In</Text>
         <TextInput
           style={styles.input}
           placeholder="Email"
           value={email}
           onChangeText={setEmail}
+          keyboardType="email-address"
+          autoCapitalize="none"
         />
         <TextInput
           style={styles.input}
@@ -52,8 +58,15 @@ const SignInScreen = ({ navigation }) => {
           value={password}
           onChangeText={setPassword}
         />
-        <Button title="Sign In" onPress={handleSignIn} />
-        <Button title="Switch to Sign Up" onPress={handleSwitchToSignUp} />
+        <TouchableOpacity style={styles.signInButton} onPress={handleSignIn}>
+          <Text style={styles.signInButtonText}>Sign In</Text>
+        </TouchableOpacity>
+      </View>
+      <View style={styles.switchContainer}>
+        <Text style={styles.switchText}>Don't have an account?</Text>
+        <TouchableOpacity onPress={handleSwitchToSignUp}>
+          <Text style={styles.switchButtonText}>Sign Up</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -64,35 +77,56 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: '#fff',
     paddingHorizontal: 20,
+  },
+  headerContainer: {
+    alignItems: 'center',
+    marginBottom: 30,
+  },
+  headerText: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    color: '#333',
+    marginTop: 10,
   },
   formContainer: {
     width: '100%',
     maxWidth: 400,
-    padding: 20,
-    backgroundColor: '#fff',
-    borderRadius: 10,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 20,
-    textAlign: 'center',
   },
   input: {
-    height: 40,
-    borderColor: 'gray',
+    height: 50,
+    borderColor: '#ccc',
     borderWidth: 1,
-    marginBottom: 10,
-    paddingHorizontal: 10,
+    borderRadius: 5,
+    marginBottom: 20,
+    paddingHorizontal: 15,
+    fontSize: 16,
+    color: '#333',
+  },
+  signInButton: {
+    backgroundColor: '#007BFF',
+    paddingVertical: 15,
+    borderRadius: 5,
+    alignItems: 'center',
+  },
+  signInButtonText: {
+    color: '#fff',
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  switchContainer: {
+    flexDirection: 'row',
+    marginTop: 20,
+  },
+  switchText: {
+    fontSize: 16,
+    color: '#333',
+  },
+  switchButtonText: {
+    fontSize: 16,
+    color: '#007BFF',
+    marginLeft: 5,
   },
 });
 
